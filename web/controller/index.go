@@ -36,6 +36,7 @@ func (a *IndexController) initRouter(g *gin.RouterGroup) {
 }
 
 func (a *IndexController) index(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:8000") 
 	if session.IsLogin(c) {
 		c.Redirect(http.StatusTemporaryRedirect, "xui/")
 		return
@@ -44,6 +45,7 @@ func (a *IndexController) index(c *gin.Context) {
 }
 
 func (a *IndexController) login(c *gin.Context) {
+	c.Writer.Header().Set("Access-Control-Allow-Origin", "http://localhost:8000") 
 	var form LoginForm
 	err := c.ShouldBind(&form)
 	if err != nil {

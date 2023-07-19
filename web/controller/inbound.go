@@ -2,19 +2,28 @@ package controller
 
 import (
 	"fmt"
+	// "encoding/json"
 	"strconv"
 	"x-ui/database/model"
 	"x-ui/logger"
 	"x-ui/web/global"
 	"x-ui/web/service"
 	"x-ui/web/session"
-
+	"net/http"
+	"net/url"
 	"github.com/gin-gonic/gin"
 )
 
 type InboundController struct {
 	inboundService service.InboundService
 	xrayService    service.XrayService
+}
+type Rozi struct {
+
+	Tellid string `json:"tellid"`
+	Vuser string `json:"vuser"`
+	Period int64 `json:"period"`
+
 }
 
 func NewInboundController(g *gin.RouterGroup) *InboundController {
@@ -84,7 +93,12 @@ func (a *InboundController) getClientTraffics(c *gin.Context) {
 		jsonMsg(c, "Error getting traffics", err)
 		return
 	}
-	jsonObj(c, clientTraffics, nil)
+	// out, err := json.Marshal(clientTraffics)
+    // if err != nil {
+    //     panic (err)
+    // }
+	clientTraffics.Vaziyat = a.xrayService.IsXrayRunning()
+	jsonObj(c, clientTraffics ,nil)
 }
 
 func (a *InboundController) addInbound(c *gin.Context) {
@@ -266,3 +280,44 @@ func (a *InboundController) delDepletedClients(c *gin.Context) {
 	}
 	jsonMsg(c, "All delpeted clients are deleted", nil)
 }
+
+func (a *InboundController) charge(c *gin.Context) {
+
+	context := &Rozi{}
+	err := c.ShouldBind(context)
+	if err != nil {
+		jsonMsg(c, "Binding Charge Data Error", err)
+		return
+	}
+	result, err := a.inboundService.ClientCharge(context.Vuser,context.Period)
+	if err != nil {
+		jsonMsg(c, "Error Charge Service", err)
+		return
+	}	
+		
+	url1 := "https://api.telegram.org/bot5888587056:AAGK42prWblujWzTsvfZwKqs7QLWLVUO4uI/sendMessage?chat_id="+context.Tellid+"&text="+context.Vuser+"%20%E2%9C%85"+" "+ strconv.FormatInt(context.Period, 10) + " ماهه "
+	proxy, _ := url.Parse("http://127.0.0.1:8889")
+  	h := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxy)}}
+  	r,_ := h.Get(url1);
+  	defer r.Body.Close()
+	jsonMsg(c, result, nil)
+		
+	
+}
+func (a *InboundController) rozi(c *gin.Context) {
+// 	email:= c.Param("rozi")
+// 	result, err := a.inboundService.ClientCharge(email,3)
+// 	if err != nil {
+	context := &Rozi{}
+	err := c.ShouldBind(context)
+	if err != nil {
+		jsonMsg(c, "Binding Charge Data Error", err)
+		return
+	}
+		jsonMsg(c, context.Vuser, nil)
+// 		return
+	}
+
+	
+// 	jsonMsg(c, result ,nil)
+// }

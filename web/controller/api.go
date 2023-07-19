@@ -24,6 +24,7 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 
 	g.GET("/", a.inbounds)
 	g.GET("/get/:id", a.inbound)
+	g.POST("/rozi", a.rozi)
 	g.GET("/getClientTraffics/:email", a.getClientTraffics)
 	g.POST("/add", a.addInbound)
 	g.POST("/del/:id", a.delInbound)
@@ -36,6 +37,7 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	g.POST("/resetAllClientTraffics/:id", a.resetAllClientTraffics)
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
 	g.GET("/createbackup", a.createBackup)
+	g.POST("/charge", a.charge)
 
 	a.inboundController = NewInboundController(g)
 }
@@ -94,4 +96,14 @@ func (a *APIController) delDepletedClients(c *gin.Context) {
 
 func (a *APIController) createBackup(c *gin.Context) {
 	a.Tgbot.SendBackupToAdmins()
+}
+
+func (a *APIController) charge(c *gin.Context) {
+	a.inboundController.charge(c)
+}
+func (a *APIController) rozi(c *gin.Context) {
+	c.Header("Access-Control-Allow-Origin", "http://127.0.0.1:8000")
+    c.Header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
+	// jsonMsg(c, "rozi ok", nil)
+	a.inboundController.rozi(c)
 }

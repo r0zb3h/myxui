@@ -1134,3 +1134,49 @@ func (s *InboundService) MigrateDB() {
 	s.MigrationRequirements()
 	s.MigrationRemoveOrphanedTraffics()
 }
+func (s *InboundService) ClientCharge(email string , period int64) (result string, err error) {
+	
+	uTime := ((time.Now().Unix() ) +(period * 30 * 24 * 60 * 60)) * 1000
+	db := database.GetDB()
+	var InboundId int
+	var myinbound *model.Inbound
+	traffic, err := s.GetClientTrafficByEmail(email)
+	if err != nil {
+		return "Error Get Client", err
+		  }
+	InboundId =traffic.InboundId  
+	myinbound, err =s.GetInbound(InboundId)
+	var settings map[string]interface{}
+	err = json.Unmarshal([]byte(myinbound.Settings), &settings)
+	if err != nil {
+		return "Error Convert Settings", err
+	}
+	clients, ok := settings["clients"].([]interface{})
+	if ok {
+ 	for i := range clients {
+   		c := clients[i].(map[string]interface{})
+			if c["email"] == email{
+				c["totalGB"] = 42949672960*period
+				c["expiryTime"] = uTime
+				c["enable"] = true
+			}
+}
+}
+	stringSettings , err := json.MarshalIndent(settings, "", "  ")
+	myinbound.Settings = string(stringSettings)
+	err = db.Save(myinbound).Error
+	if err != nil {
+ 	return "Error Save Inbonds.Settings", err
+	}
+traffic.Up = 0
+traffic.Down = 0
+traffic.Enable = true
+traffic.Total=42949672960*period
+traffic.ExpiryTime=uTime
+err = db.Save(traffic).Error
+if err != nil {
+ return "Error Save Traffics", err
+	}
+result="Charged"
+return result, nil
+}
