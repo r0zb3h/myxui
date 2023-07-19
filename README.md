@@ -1,4 +1,4 @@
-# x-ui
+# myxui
 
 ![](https://img.shields.io/github/v/release/r0zbeh/myxui.svg)
 ![](https://img.shields.io/docker/pulls/alireza7/x-ui.svg)
