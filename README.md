@@ -25,10 +25,6 @@ xray panel supporting multi-protocol, **Multi-lang (English,Farsi,Chinese,Russia
 
 **If you think this project is helpful to you, you may wish to give a** :star2:
 
-**Buy Me a Coffee :**
-
-- Tron USDT (TRC20): `TYTq73Gj6dJ67qe58JVPD9zpjW2cc9XgVz`
-- Tezos (XTZ): tz2Wnh2SsY1eezXrcLChu6idWpgdHzUFQcts
 
 # Install & Upgrade to latest version
 
@@ -277,10 +273,8 @@ restart panel
 </details>
 
 # a special thanks to
-
+- [Alireza0]
 - [HexaSoftwareTech](https://github.com/HexaSoftwareTech/)
 - [MHSanaei](https://github.com/MHSanaei)
 
-## Stargazers over time
 
-[![Stargazers over time](https://starchart.cc/r0zbeh/myxui.svg)](https://starchart.cc/r0zbeh/myxui)
