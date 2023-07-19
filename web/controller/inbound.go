@@ -2,7 +2,7 @@ package controller
 
 import (
 	"fmt"
-	// "encoding/json"
+	"encoding/json"
 	"strconv"
 	"x-ui/database/model"
 	"x-ui/logger"
@@ -93,12 +93,11 @@ func (a *InboundController) getClientTraffics(c *gin.Context) {
 		jsonMsg(c, "Error getting traffics", err)
 		return
 	}
-	// out, err := json.Marshal(clientTraffics)
-    // if err != nil {
-    //     panic (err)
-    // }
-	clientTraffics.Vaziyat = a.xrayService.IsXrayRunning()
-	jsonObj(c, clientTraffics ,nil)
+	svinfo := make(map[string]interface{})
+	inrec, _ := json.Marshal(clientTraffics)
+	json.Unmarshal(inrec, &svinfo)
+	svinfo["vaziyat"]=a.xrayService.IsXrayRunning()	
+	jsonObj(c, svinfo ,nil)
 }
 
 func (a *InboundController) addInbound(c *gin.Context) {
