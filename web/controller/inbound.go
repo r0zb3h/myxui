@@ -10,7 +10,6 @@ import (
 	"x-ui/web/service"
 	"x-ui/web/session"
 	"net/http"
-	"net/url"
 	"github.com/gin-gonic/gin"
 )
 
@@ -298,8 +297,7 @@ func (a *InboundController) charge(c *gin.Context) {
 	}	
 		
 	url1 := "https://api.telegram.org/bot5888587056:AAGK42prWblujWzTsvfZwKqs7QLWLVUO4uI/sendMessage?chat_id="+context.Tellid+"&text="+context.Vuser+"%20%E2%9C%85"+" "+ strconv.FormatInt(context.Period, 10) + " ماهه "
-	proxy, _ := url.Parse("http://127.0.0.1:8889")
-  	h := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxy)}}
+  	h := &http.Client{Transport: &http.Transport{}}
   	r,_ := h.Get(url1);
   	defer r.Body.Close()
 	jsonMsg(c, result, nil)
