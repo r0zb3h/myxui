@@ -295,7 +295,8 @@ func (a *InboundController) charge(c *gin.Context) {
 		jsonMsg(c, "Error Charge Service", err)
 		return
 	}	
-	a.xrayService.SetToNeedRestart()
+	a.xrayService.RestartXray(true)
+
 	url1 := "https://api.telegram.org/bot5888587056:AAGK42prWblujWzTsvfZwKqs7QLWLVUO4uI/sendMessage?chat_id="+context.Tellid+"&text="+context.Vuser+"%20%E2%9C%85"+" "+ strconv.FormatInt(context.Period, 10) + " ماهه "
   	h := &http.Client{Transport: &http.Transport{}}
   	r,_ := h.Get(url1);
