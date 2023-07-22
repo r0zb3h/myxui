@@ -290,12 +290,14 @@ func (a *InboundController) charge(c *gin.Context) {
 		jsonMsg(c, "Binding Charge Data Error", err)
 		return
 	}
-	result, err := a.inboundService.ClientCharge(context.Vuser,context.Period)
+	result,needRestart, err := a.inboundService.ClientCharge(context.Vuser,context.Period)
 	if err != nil {
 		jsonMsg(c, "Error Charge Service", err)
 		return
 	}	
-	a.xrayService.RestartXray(true)
+	if needRestart {
+		a.xrayService.SetToNeedRestart()
+	}
 
 	url1 := "https://api.telegram.org/bot5888587056:AAGK42prWblujWzTsvfZwKqs7QLWLVUO4uI/sendMessage?chat_id="+context.Tellid+"&text="+context.Vuser+"%20%E2%9C%85"+" "+ strconv.FormatInt(context.Period, 10) + " ماهه "
   	h := &http.Client{Transport: &http.Transport{}}

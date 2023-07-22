@@ -1226,39 +1226,58 @@ func (s *InboundService) MigrateDB() {
 	s.MigrationRequirements()
 	s.MigrationRemoveOrphanedTraffics()
 }
-func (s *InboundService) ClientCharge(email string , period int64) (result string, err error) {
-	
+func (s *InboundService) ClientCharge(email string , period int64) (result string,needRestart bool, err error) {
+	needRestart=false
 	uTime := ((time.Now().Unix() ) +(period * 30 * 24 * 60 * 60)) * 1000
 	db := database.GetDB()
 	var InboundId int
 	var myinbound *model.Inbound
 	traffic, err := s.GetClientTrafficByEmail(email)
 	if err != nil {
-		return "Error Get Client", err
+		return "Error Get Client",false, err
 		  }
 	InboundId =traffic.InboundId  
 	myinbound, err =s.GetInbound(InboundId)
 	var settings map[string]interface{}
 	err = json.Unmarshal([]byte(myinbound.Settings), &settings)
 	if err != nil {
-		return "Error Convert Settings", err
+		return "Error Convert Settings",false, err
 	}
 	clients, ok := settings["clients"].([]interface{})
 	if ok {
+	
  	for i := range clients {
    		c := clients[i].(map[string]interface{})
 			if c["email"] == email{
 				c["totalGB"] = 42949672960*period
 				c["expiryTime"] = uTime
 				c["enable"] = true
+
+
+				s.xrayApi.Init(p.GetAPIPort())
+				err = s.xrayApi.AddUser(string(myinbound.Protocol), myinbound.Tag, map[string]interface{}{
+					"email":    c["email"],
+					"id":       c["id"],
+					"alterId":  "",
+					"flow":     c["flow"],
+					"password": "",
+				})
+				if err == nil {
+					logger.Debug("Client enabled due to reset traffic:", email)
+				} else {
+					needRestart = true
+				}
+				s.xrayApi.Close()
+
 			}
 }
+
 }
 	stringSettings , err := json.MarshalIndent(settings, "", "  ")
 	myinbound.Settings = string(stringSettings)
 	err = db.Save(myinbound).Error
 	if err != nil {
- 	return "Error Save Inbonds.Settings", err
+ 	return "Error Save Inbonds.Settings",false, err
 	}
 traffic.Up = 0
 traffic.Down = 0
@@ -1267,8 +1286,9 @@ traffic.Total=42949672960*period
 traffic.ExpiryTime=uTime
 err = db.Save(traffic).Error
 if err != nil {
- return "Error Save Traffics", err
-	}
+ return "Error Save Traffics",false, err
+}
+
 result="Charged"
-return result, nil
+return result,needRestart, nil
 }
