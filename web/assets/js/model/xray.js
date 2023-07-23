@@ -1405,10 +1405,10 @@ class Inbound extends XrayCommonClass {
                 JSON.parse(this.settings).clients.forEach((client,index) => {
                     if(this.tls && !ObjectUtil.isArrEmpty(this.stream.tls.settings.domains)){
                         this.stream.tls.settings.domains.forEach((domain) => {
-                            link += this.genLink(domain.domain, remark + '-' + client.email + '-' + domain.remark, index) + '\r\n';
+                            link += this.genLink(domain.domain,client.email + '-' + domain.remark, index) + '\r\n';
                         });
                     } else {
-                        link += this.genLink(address, remark + '-' + client.email, index) + '\r\n';
+                        link += this.genLink(address,client.email, index) + '\r\n';
                     }
                 });
                 return link;
