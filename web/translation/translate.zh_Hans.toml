@@ -48,6 +48,8 @@
 "clients" = "客户端"
 "usage" = "用法"
 "remained" = "仍然存在"
+"secAlertTitle" = "安全警报"
+"secAlertSsl" = "此连接不安全；在激活 TLS 进行数据保护之前，请勿输入敏感信息"
 
 [menu]
 "dashboard" = "系统状态"
@@ -125,7 +127,6 @@
 "network" = "网络"
 "destinationPort" = "目标端口"
 "targetAddress" = "目标地址"
-"disableInsecureEncryption" = "禁用不安全加密"
 "monitorDesc" = "默认留空即可"
 "meansNoLimit" = "表示不限制"
 "totalFlow" = "总流量"
@@ -221,6 +222,8 @@
 "privateKeyPathDesc" = "填写一个 '/' 开头的绝对路径"
 "panelUrlPath" = "面板 url 根路径"
 "panelUrlPathDesc" = "必须以 '/' 开头，以 '/' 结尾"
+"pageSize" = "分页大小"
+"pageSizeDesc" = "定义入站表的页面大小。设置 0 表示禁用"
 "oldUsername" = "原用户名"
 "currentPassword" = "原密码"
 "newUsername" = "新用户名"
@@ -266,6 +269,8 @@
 "subUpdatesDesc" = "客户端应用程序更新之间的间隔时间"
 "subEncrypt" = "加密配置"
 "subEncryptDesc" = "在订阅中加密返回的配置"
+"subShowInfo" = "显示使用信息"
+"subShowInfoDesc" = "在配置名称后显示剩余流量和日期"
 
 [pages.settings.templates]
 "title" = "模板"
@@ -402,6 +407,8 @@
 "disabled" = "🛑 禁用：{{ .Disabled }}\r\n"
 "depleteSoon" = "🔜 即将耗尽：{{ .Deplete }}\r\n \r\n"
 "backupTime" = "🗄 备份时间：{{ .Time }}\r\n"
+"yes" = "✅ 是"
+"no" = "❌ 不"
 
 [tgbot.buttons]
 "dbBackup" = "获取数据库备份"

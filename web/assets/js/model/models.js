@@ -172,6 +172,7 @@ class AllSetting {
         this.webKeyFile = "";
         this.webBasePath = "/";
         this.sessionMaxAge = "";
+        this.pageSize = 0;
         this.expireDiff = "";
         this.trafficDiff = "";
         this.tgBotEnable = false;
@@ -192,6 +193,7 @@ class AllSetting {
         this.subKeyFile = "";
         this.subUpdates = 0;
         this.subEncrypt = true;
+        this.subShowInfo = false;
 
         this.timeLocation = "Asia/Tehran";
 

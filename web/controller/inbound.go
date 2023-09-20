@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"strconv"
 	"x-ui/database/model"
-	"x-ui/logger"
-	"x-ui/web/global"
 	"x-ui/web/service"
 	"x-ui/web/session"
 	"net/http"
@@ -29,7 +27,6 @@ type Rozi struct {
 func NewInboundController(g *gin.RouterGroup) *InboundController {
 	a := &InboundController{}
 	a.initRouter(g)
-	a.startTask()
 	return a
 }
 
@@ -48,19 +45,6 @@ func (a *InboundController) initRouter(g *gin.RouterGroup) {
 	g.POST("/resetAllClientTraffics/:id", a.resetAllClientTraffics)
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
 
-}
-
-func (a *InboundController) startTask() {
-	webServer := global.GetWebServer()
-	c := webServer.GetCron()
-	c.AddFunc("@every 10s", func() {
-		if a.xrayService.IsNeedRestartAndSetFalse() {
-			err := a.xrayService.RestartXray(false)
-			if err != nil {
-				logger.Error("restart xray failed:", err)
-			}
-		}
-	})
 }
 
 func (a *InboundController) getInbounds(c *gin.Context) {

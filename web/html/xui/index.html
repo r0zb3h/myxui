@@ -23,6 +23,15 @@
         <a-layout-content>
             <a-spin :spinning="spinning" :delay="200" :tip="loadingTip"/>
             <transition name="list" appear>
+                <a-alert type="error" v-if="showAlert" style="margin-bottom: 10px"
+                message='{{ i18n "secAlertTitle" }}'
+                color="red"
+                description='{{ i18n "secAlertSsl" }}'
+                show-icon closable
+                >
+                </a-alert>
+            </transition>
+            <transition name="list" appear>
                 <a-row>
                     <a-card hoverable :class="themeSwitcher.darkCardClass">
                         <a-row>
@@ -33,7 +42,7 @@
                                                     :stroke-color="status.cpu.color"
                                                     :class="themeSwitcher.darkCardClass"
                                                     :percent="status.cpu.percent"></a-progress>
-                                        <div>CPU</div>
+                                        <div>CPU: ([[ status.cpuCount ]]core)</div>
                                     </a-col>
                                     <a-col :span="12" style="text-align: center">
                                         <a-progress type="dashboard" status="normal"
@@ -54,7 +63,7 @@
                                                     :class="themeSwitcher.darkCardClass"
                                                     :percent="status.swap.percent"></a-progress>
                                         <div>
-                                            swap: [[ sizeFormat(status.swap.current) ]] / [[ sizeFormat(status.swap.total) ]]
+                                            Swap: [[ sizeFormat(status.swap.current) ]] / [[ sizeFormat(status.swap.total) ]]
                                         </div>
                                     </a-col>
                                     <a-col :span="12" style="text-align: center">
@@ -83,13 +92,16 @@
                     <a-col :sm="24" :md="12">
                         <a-card hoverable :class="themeSwitcher.darkCardClass">
                             {{ i18n "pages.index.operationHours" }}:
-                            <a-tag color="green">[[ formatSecond(status.uptime) ]]</a-tag>
+                            Xray
+                            <a-tag color="green">[[ formatSecond(status.appStats.uptime) ]]</a-tag>
+                            OS
                             <a-tooltip>
                                 <template slot="title">
                                     {{ i18n "pages.index.operationHoursDesc" }}
                                 </template>
                                 <a-icon type="question-circle" theme="filled"></a-icon>
                             </a-tooltip>
+                            <a-tag color="green">[[ formatSecond(status.uptime) ]]</a-tag>
                         </a-card>
                     </a-col>
                     <a-col :sm="24" :md="12">
@@ -110,7 +122,7 @@
                     <a-col :sm="24" :md="12">
                         <a-card hoverable :class="themeSwitcher.darkCardClass">
                             {{ i18n "menu.link" }}:
-                            <a-tag color="blue" style="cursor: pointer;" @click="openLogs(20)">{{ i18n "pages.index.logs" }}</a-tag>
+                            <a-tag color="blue" style="cursor: pointer;" @click="openLogs()">{{ i18n "pages.index.logs" }}</a-tag>
                             <a-tag color="blue" style="cursor: pointer;" @click="openConfig">{{ i18n "pages.index.config" }}</a-tag>
                             <a-tag color="blue" style="cursor: pointer;" @click="openBackup">{{ i18n "pages.index.backup" }}</a-tag>
                         </a-card>
@@ -122,7 +134,36 @@
                     </a-col>
                     <a-col :sm="24" :md="12">
                         <a-card hoverable :class="themeSwitcher.darkCardClass">
-                            tcp / udp {{ i18n "pages.index.connectionCount" }}: [[ status.tcpCount ]] / [[ status.udpCount ]]
+                            {{ i18n "usage"}}:
+                            Memory: [[ sizeFormat(status.appStats.mem) ]] -
+                            Threads: [[ status.appStats.threads ]]
+                            </a-tooltip>
+                        </a-card>
+                    </a-col>
+                    <a-col :sm="24" :md="12">
+                        <a-card hoverable :class="themeSwitcher.darkCardClass">
+                            Host: [[ status.hostInfo.hostname ]] -
+                            <template v-if="status.hostInfo.ipv4">IPv4:
+                            <a-tooltip>
+                                <template slot="title">
+                                    [[ status.hostInfo.ipv4 ]]
+                                </template>
+                                <a-icon type="question-circle" theme="filled"></a-icon>
+                            </a-tooltip>
+                            </template>
+                            <template v-if="status.hostInfo.ipv6">IPv6:
+                            <a-tooltip>
+                                <template slot="title">
+                                    [[ status.hostInfo.ipv6 ]]
+                                </template>
+                                <a-icon type="question-circle" theme="filled"></a-icon>
+                            </a-tooltip>
+                            </template>
+                        </a-card>
+                    </a-col>
+                    <a-col :sm="24" :md="12">
+                        <a-card hoverable :class="themeSwitcher.darkCardClass">
+                            {{ i18n "pages.index.connectionCount" }}: TCP: [[ status.tcpCount ]]  UDP: [[ status.udpCount ]]
                             <a-tooltip>
                                 <template slot="title">
                                     {{ i18n "pages.index.connectionCountDesc" }}
@@ -211,7 +252,7 @@
             <a-form-item label="Count">
                 <a-select v-model="logModal.rows"
                 style="width: 80px"
-                @change="openLogs(logModal.rows)"
+                @change="openLogs()"
                 :dropdown-class-name="themeSwitcher.darkCardClass">
                     <a-select-option value="10">10</a-select-option>
                     <a-select-option value="20">20</a-select-option>
@@ -219,8 +260,22 @@
                     <a-select-option value="100">100</a-select-option>
                 </a-select>
             </a-form-item>
+            <a-form-item label="Log Level">
+                <a-select v-model="logModal.level"
+                style="width: 120px"
+                @change="openLogs()"
+                :dropdown-class-name="themeSwitcher.darkCardClass">
+                    <a-select-option value="debug">Debug</a-select-option>
+                    <a-select-option value="info">Info</a-select-option>
+                    <a-select-option value="warning">Warning</a-select-option>
+                    <a-select-option value="err">Error</a-select-option>
+                </a-select>
+            </a-form-item>
+            <a-form-item label="SysLog">
+                <a-checkbox v-model="logModal.syslog" @change="openLogs()"></a-checkbox>
+            </a-form-item>
             <a-form-item>
-                <button class="ant-btn ant-btn-primary" @click="openLogs(logModal.rows)"><a-icon type="sync"></a-icon> Reload</button>
+                <button class="ant-btn ant-btn-primary" @click="openLogs()"><a-icon type="sync"></a-icon> Reload</button>
             </a-form-item>
             <a-form-item>
                 <a-button type="primary" style="margin-bottom: 10px;"
@@ -240,7 +295,7 @@
             <a-icon type="warning" style="color: inherit; font-size: 20px;"></a-icon>
             [[ backupModal.description ]]
         </p>
-        <a-space direction="horizontal" align="center" style="margin-bottom: 10px;">
+        <a-space direction="horizontal" style="text-align: center" style="margin-bottom: 10px;">
             <a-button type="primary" @click="exportDatabase()">
                 [[ backupModal.exportText ]]
             </a-button>
@@ -292,6 +347,7 @@
     class Status {
         constructor(data) {
             this.cpu = new CurTotal(0, 0);
+            this.cpuCount = 0;
             this.disk = new CurTotal(0, 0);
             this.loads = [0, 0, 0];
             this.mem = new CurTotal(0, 0);
@@ -301,12 +357,16 @@
             this.tcpCount = 0;
             this.udpCount = 0;
             this.uptime = 0;
+            this.appUptime = 0;
+            this.appStats = {threads: 0, mem: 0, uptime: 0};
+            this.hostInfo = {hostname:"", ipv4: "", ipv6: ""};
             this.xray = {state: State.Stop, errorMsg: "", version: "", color: ""};
 
             if (data == null) {
                 return;
             }
             this.cpu = new CurTotal(data.cpu, 100);
+            this.cpuCount = data.cpuCount;
             this.disk = new CurTotal(data.disk.current, data.disk.total);
             this.loads = data.loads.map(load => toFixed(load, 2));
             this.mem = new CurTotal(data.mem.current, data.mem.total);
@@ -316,6 +376,9 @@
             this.tcpCount = data.tcpCount;
             this.udpCount = data.udpCount;
             this.uptime = data.uptime;
+            this.appUptime = data.appUptime;
+            this.appStats = data.appStats;
+            this.hostInfo = data.hostInfo;
             this.xray = data.xray;
             switch (this.xray.state) {
                 case State.Running:
@@ -349,10 +412,11 @@
         visible: false,
         logs: '',
         rows: 20,
-        show(logs, rows) {
+        level: 'info',
+        syslog: false,
+        show(logs) {
             this.visible = true;
-            this.rows = rows;
-            this.logs = logs.join("\n");
+            this.logs = logs? logs.join("\n"): "No Record...";
         },
         hide() {
             this.visible = false;
@@ -394,6 +458,7 @@
             backupModal,
             spinning: false,
             loadingTip: '{{ i18n "loading"}}',
+            showAlert: false,
         },
         methods: {
             loading(spinning, tip = '{{ i18n "loading"}}') {
@@ -449,14 +514,14 @@
                     return;
                 }
             },
-            async openLogs(rows){
+            async openLogs(){
                 this.loading(true);
-                const msg = await HttpUtil.post('server/logs/'+rows);
+                const msg = await HttpUtil.post('server/logs/'+logModal.rows,{level: logModal.level, syslog: logModal.syslog});
                 this.loading(false);
                 if (!msg.success) {
                     return;
                 }
-                logModal.show(msg.obj, rows);
+                logModal.show(msg.obj);
             },
             async openConfig() {
                 this.loading(true);
@@ -512,6 +577,9 @@
             },
         },
         async mounted() {
+            if (window.location.protocol !== "https:") {
+                this.showAlert = true;
+            }
             while (true) {
                 try {
                     await this.getStatus();

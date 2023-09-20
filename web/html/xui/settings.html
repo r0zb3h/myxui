@@ -52,6 +52,15 @@
     <a-layout id="content-layout" :style="themeSwitcher.bgStyle">
         <a-layout-content>
             <a-spin :spinning="spinning" :delay="500" tip="loading">
+                <transition name="list" appear>
+                    <a-alert type="error" v-if="showAlert" style="margin-bottom: 10px"
+                    message='{{ i18n "secAlertTitle" }}'
+                    color="red"
+                    description='{{ i18n "secAlertSsl" }}'
+                    show-icon closable
+                    >
+                    </a-alert>
+                </transition>
                 <a-space direction="vertical">
                     <a-space direction="horizontal">
                         <a-button type="primary" :disabled="saveBtnDisable" @click="updateAllSetting">{{ i18n "pages.settings.save" }}</a-button>
@@ -73,6 +82,7 @@
                                 <setting-list-item type="text" title='{{ i18n "pages.settings.privateKeyPath"}}' desc='{{ i18n "pages.settings.privateKeyPathDesc"}}' v-model="allSetting.webKeyFile"></setting-list-item>
                                 <setting-list-item type="text" title='{{ i18n "pages.settings.panelUrlPath"}}' desc='{{ i18n "pages.settings.panelUrlPathDesc"}}' v-model="allSetting.webBasePath"></setting-list-item>
                                 <setting-list-item type="number" title='{{ i18n "pages.settings.sessionMaxAge" }}' desc='{{ i18n "pages.settings.sessionMaxAgeDesc" }}'  v-model="allSetting.sessionMaxAge" :min="0"></setting-list-item>
+                                <setting-list-item type="number" title='{{ i18n "pages.settings.pageSize" }}' desc='{{ i18n "pages.settings.pageSizeDesc" }}'  v-model="allSetting.pageSize" :min="0" :step="5"></setting-list-item>
                                 <setting-list-item type="number" title='{{ i18n "pages.settings.expireTimeDiff" }}' desc='{{ i18n "pages.settings.expireTimeDiffDesc" }}'  v-model="allSetting.expireDiff" :min="0"></setting-list-item>
                                 <setting-list-item type="number" title='{{ i18n "pages.settings.trafficDiff" }}' desc='{{ i18n "pages.settings.trafficDiffDesc" }}'  v-model="allSetting.trafficDiff" :min="0"></setting-list-item>
                                 <setting-list-item type="text" title='{{ i18n "pages.settings.timeZone"}}' desc='{{ i18n "pages.settings.timeZoneDesc"}}' v-model="allSetting.timeLocation"></setting-list-item>
@@ -329,6 +339,7 @@
                             <a-list item-layout="horizontal" :style="themeSwitcher.textStyle">
                                 <setting-list-item type="switch" title='{{ i18n "pages.settings.subEnable"}}' desc='{{ i18n "pages.settings.subEnableDesc"}}' v-model="allSetting.subEnable"></setting-list-item>
                                 <setting-list-item type="switch" title='{{ i18n "pages.settings.subEncrypt"}}' desc='{{ i18n "pages.settings.subEncryptDesc"}}' v-model="allSetting.subEncrypt"></setting-list-item>
+                                <setting-list-item type="switch" title='{{ i18n "pages.settings.subShowInfo"}}' desc='{{ i18n "pages.settings.subShowInfoDesc"}}' v-model="allSetting.subShowInfo"></setting-list-item>
                                 <setting-list-item type="text" title='{{ i18n "pages.settings.subListen"}}' desc='{{ i18n "pages.settings.subListenDesc"}}' v-model="allSetting.subListen"></setting-list-item>
                                 <setting-list-item type="text" title='{{ i18n "pages.settings.subDomain"}}' desc='{{ i18n "pages.settings.subDomainDesc"}}' v-model="allSetting.subDomain"></setting-list-item>
                                 <setting-list-item type="number" title='{{ i18n "pages.settings.subPort"}}' desc='{{ i18n "pages.settings.subPortDesc"}}' v-model.number="allSetting.subPort"></setting-list-item>
@@ -362,6 +373,7 @@
             saveBtnDisable: true,
             user: {},
             lang: getLang(),
+            showAlert: false,
             ipv4Settings: {
                 tag: "IPv4",
                 protocol: "freedom",
@@ -550,6 +562,9 @@
             }
         },
         async mounted() {
+            if (window.location.protocol !== "https:") {
+                this.showAlert = true;
+            }
             await this.getAllSetting();
             while (true) {
                 await PromiseUtil.sleep(1000);
