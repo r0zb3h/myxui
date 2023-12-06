@@ -1,9 +1,9 @@
 # myxui
 
-![](https://img.shields.io/github/v/release/r0zbeh/myxui.svg)
+![](https://img.shields.io/github/v/release/r0zb3h/myxui.svg)
 ![](https://img.shields.io/docker/pulls/alireza7/x-ui.svg)
-[![Go Report Card](https://goreportcard.com/badge/github.com/r0zbeh/myxui)](https://goreportcard.com/report/github.com/r0zbeh/myxui)
-[![Downloads](https://img.shields.io/github/downloads/r0zbeh/myxui/total.svg)](https://img.shields.io/github/downloads/r0zbeh/myxui/total.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/r0zb3h/myxui)](https://goreportcard.com/report/github.com/r0zb3h/myxui)
+[![Downloads](https://img.shields.io/github/downloads/r0zb3h/myxui/total.svg)](https://img.shields.io/github/downloads/r0zb3h/myxui/total.svg)
 [![License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?longCache=true)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 > **Disclaimer: This project is only for personal learning and communication, please do not use it for illegal purposes, please do not use it in a production environment**
@@ -30,7 +30,7 @@
 # Install & Upgrade to latest version
 
 ```sh
-bash <(curl -Ls https://raw.githubusercontent.com/r0zbeh/myxui/master/install.sh)
+bash <(curl -Ls https://raw.githubusercontent.com/r0zb3h/myxui/master/install.sh)
 ```
 
 ## Install Custom Version
@@ -38,12 +38,12 @@ bash <(curl -Ls https://raw.githubusercontent.com/r0zbeh/myxui/master/install.sh
 To install your desired version you can add the version to the end of install command. Example for ver `0.5.2`:
 
 ```sh
-bash <(curl -Ls https://raw.githubusercontent.com/r0zbeh/myxui/master/install.sh) 0.5.2
+bash <(curl -Ls https://raw.githubusercontent.com/r0zb3h/myxui/master/install.sh) 0.5.2
 ```
 
 ## Manual Install & Upgrade
 
-1. First download the latest compressed package from https://github.com/r0zbeh/myxui/releases, generally choose Architecture `amd64`
+1. First download the latest compressed package from https://github.com/r0zb3h/myxui/releases, generally choose Architecture `amd64`
 2. Then upload the compressed package to the server's `/root/` directory and `root` rootlog in to the server with user
 
 > If your server cpu architecture is not `amd64` replace another architecture
