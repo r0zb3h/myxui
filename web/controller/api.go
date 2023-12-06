@@ -38,6 +38,7 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
 	g.GET("/createbackup", a.createBackup)
 	g.POST("/charge", a.charge)
+	g.POST("/onlines", a.onlines)
 
 	a.inboundController = NewInboundController(g)
 }
@@ -106,4 +107,7 @@ func (a *APIController) rozi(c *gin.Context) {
     c.Header("Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, OPTIONS")
 	// jsonMsg(c, "rozi ok", nil)
 	a.inboundController.rozi(c)
+}
+func (a *APIController) onlines(c *gin.Context) {
+	a.inboundController.onlines(c)
 }

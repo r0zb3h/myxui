@@ -613,48 +613,52 @@ ssl_cert_issue_CF() {
 }
 
 show_usage() {
-    echo "x-ui control menu usages: "
+    echo "X-UI Control Menu Usage"
     echo "------------------------------------------"
-    echo "x-ui              - Enter     Admin menu"
-    echo "x-ui start        - Start     x-ui"
-    echo "x-ui stop         - Stop      x-ui"
-    echo "x-ui restart      - Restart   x-ui"
-    echo "x-ui status       - Show      x-ui status"
-    echo "x-ui enable       - Enable    x-ui on system startup"
-    echo "x-ui disable      - Disable   x-ui on system startup"
-    echo "x-ui log          - Check     x-ui logs"
-    echo "x-ui update       - Update    x-ui"
-    echo "x-ui install      - Install   x-ui"
-    echo "x-ui uninstall    - Uninstall x-ui"
+    echo "SUBCOMMANDS:" 
+    echo "x-ui              - Admin management script"
+    echo "x-ui start        - Start X-UI"
+    echo "x-ui stop         - Stop X-UI"
+    echo "x-ui restart      - Restart X-UI"
+    echo "x-ui status       - Current X-UI status"
+    echo "x-ui enable       - Enable X-UI on system startup"
+    echo "x-ui disable      - Disable X-UI on system startup"
+    echo "x-ui log          - Check X-UI logs"
+    echo "x-ui update       - Update X-UI"
+    echo "x-ui install      - Install X-UI"
+    echo "x-ui uninstall    - Uninstall X-UI"
+    echo "x-ui help         - Control menu usage"
     echo "------------------------------------------"
 }
 
 show_menu() {
     echo -e "
-  ${green}x-ui Panel Management Script${plain}
-  ${green}0.${plain} exit script
+  ${green}X-UI Admin Management Script ${plain}
 ————————————————
-  ${green}1.${plain} Install x-ui
-  ${green}2.${plain} Update x-ui
-  ${green}3.${plain} Uninstall x-ui
+  ${green}0.${plain} Exit 
 ————————————————
-  ${green}4.${plain} Reset username and password
-  ${green}5.${plain} Reset panel settings
-  ${green}6.${plain} Set panel port
-  ${green}7.${plain} View current panel settings
+  ${green}1.${plain} Install X-UI
+  ${green}2.${plain} Update X-UI
+  ${green}3.${plain} Uninstall X-UI
 ————————————————
-  ${green}8.${plain} Start x-ui
-  ${green}9.${plain} Stop x-ui
-  ${green}10.${plain} Reboot x-ui
-  ${green}11.${plain} Check x-ui state
-  ${green}12.${plain} Check x-ui logs
+  ${green}4.${plain} Reset Username and Password
+  ${green}5.${plain} Reset Panel Settings
+  ${green}6.${plain} Set Panel Port
+  ${green}7.${plain} View Current Panel Settings
 ————————————————
-  ${green}13.${plain} Set x-ui Autostart
-  ${green}14.${plain} Cancel x-ui Autostart
+  ${green}8.${plain} Start X-UI
+  ${green}9.${plain} Stop X-UI
+  ${green}10.${plain} Restart X-UI
+  ${green}11.${plain} Check X-UI State
+  ${green}12.${plain} Check X-UI Logs
 ————————————————
-  ${green}15.${plain} 一A key installation bbr (latest kernel)
+  ${green}13.${plain} Set X-UI Autostart
+  ${green}14.${plain} Cancel X-UI Autostart
+————————————————
+  ${green}15.${plain} 一A Key Installation BBR (latest kernel)
   ${green}16.${plain} 一SSL Certificate Management
   ${green}17.${plain} 一Cloudflare SSL Certificate
+————————————————
  "
     show_status
     echo && read -p "Please enter your selection [0-17]: " num
@@ -715,7 +719,7 @@ show_menu() {
         ssl_cert_issue_CF
         ;;
     *)
-        LOGE "Please enter the correct number [0-16]"
+        LOGE "Please enter the correct number [0-17]"
         ;;
     esac
 }

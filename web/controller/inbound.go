@@ -44,7 +44,7 @@ func (a *InboundController) initRouter(g *gin.RouterGroup) {
 	g.POST("/resetAllTraffics", a.resetAllTraffics)
 	g.POST("/resetAllClientTraffics/:id", a.resetAllClientTraffics)
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
-
+	g.POST("/onlines", a.onlines)
 }
 
 func (a *InboundController) getInbounds(c *gin.Context) {
@@ -309,3 +309,6 @@ func (a *InboundController) rozi(c *gin.Context) {
 	
 // 	jsonMsg(c, result ,nil)
 // }
+func (a *InboundController) onlines(c *gin.Context) {
+	jsonObj(c, a.inboundService.GetOnlineClinets(), nil)
+}

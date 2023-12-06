@@ -8,7 +8,7 @@
 
 > **Disclaimer: This project is only for personal learning and communication, please do not use it for illegal purposes, please do not use it in a production environment**
 
-xray panel supporting multi-protocol, **Multi-lang (English,Farsi,Chinese,Russian)**
+**Xray Panel Supporting Multi-Protocol, Multi-lang (English,Farsi,Chinese,Russian)**
 
 | Features                             |      Enable?       |
 | ------------------------------------ | :----------------: |
@@ -22,8 +22,9 @@ xray panel supporting multi-protocol, **Multi-lang (English,Farsi,Chinese,Russia
 | Backup database using Telegram BOT   | :heavy_check_mark: |
 | Subscription link + userInfo         | :heavy_check_mark: |
 | Calculate expire date on first usage | :heavy_check_mark: |
+| Show Online Clients                  | :heavy_check_mark: |
 
-**If you think this project is helpful to you, you may wish to give a** :star2:
+
 
 
 # Install & Upgrade to latest version
@@ -32,7 +33,7 @@ xray panel supporting multi-protocol, **Multi-lang (English,Farsi,Chinese,Russia
 bash <(curl -Ls https://raw.githubusercontent.com/r0zbeh/myxui/master/install.sh)
 ```
 
-## Install custom version
+## Install Custom Version
 
 To install your desired version you can add the version to the end of install command. Example for ver `0.5.2`:
 
@@ -40,7 +41,7 @@ To install your desired version you can add the version to the end of install co
 bash <(curl -Ls https://raw.githubusercontent.com/r0zbeh/myxui/master/install.sh) 0.5.2
 ```
 
-## Manual install & upgrade
+## Manual Install & Upgrade
 
 1. First download the latest compressed package from https://github.com/r0zbeh/myxui/releases, generally choose Architecture `amd64`
 2. Then upload the compressed package to the server's `/root/` directory and `root` rootlog in to the server with user
@@ -62,15 +63,15 @@ systemctl enable x-ui
 systemctl restart x-ui
 ```
 
-## Install using docker
+## Install Using Docker
 
-1. install docker
+1. Install Docker
 
 ```shell
 curl -fsSL https://get.docker.com | sh
 ```
 
-2. install x-ui
+2. Install X-UI
 
 ```shell
 mkdir x-ui && cd x-ui
@@ -89,7 +90,7 @@ docker run -itd \
 docker build -t x-ui .
 ```
 
-# Features
+## Features
 
 - System Status Monitoring
 - Search within all inbounds and clients
@@ -106,34 +107,37 @@ docker build -t x-ui .
 - Support one-click SSL certificate application and automatic renewal
 - For more advanced configuration items, please refer to the panel
 - Support export/import database from panel
+- Show online users
 
-## suggestion system
+## Recommended OS
 
 - CentOS 8+
 - Ubuntu 20+
 - Debian 10+
 - Fedora 36+
 
-## API routes
+## API Routes
 
 - `/login` with `PUSH` user data: `{username: '', password: ''}` for login
 - `/xui/API/inbounds` base for following actions:
 
-| Method | Path                            | Action                                    |
-| :----: | ------------------------------- | ----------------------------------------- |
-| `GET`  | `"/"`                           | Get all inbounds                          |
-| `GET`  | `"/get/:id"`                    | Get inbound with inbound.id               |
-| `GET`  | `"/createbackup"`               | Telegram bot sends backup to admins       |
-| `POST` | `"/add"`                        | Add inbound                               |
-| `POST` | `"/del/:id"`                    | Delete Inbound                            |
-| `POST` | `"/update/:id"`                 | Update Inbound                            |
-| `POST` | `"/addClient/"`                 | Add Client to inbound                     |
-| `POST` | `"/:id/delClient/:clientId"`    | Delete Client by clientId\*               |
-| `POST` | `"/updateClient/:clientId"`     | Update Client by clientId\*               |
-| `POST` | `"/getClientTraffics/:email"`   | Get Client's Traffic                      |
-| `POST` | `"/resetAllTraffics"`           | Reset traffics of all inbounds            |
-| `POST` | `"/resetAllClientTraffics/:id"` | Reset inbound clients traffics (-1: all)  |
-| `POST` | `"/delDepletedClients/:id"`     | Delete inbound depleted clients (-1: all) |
+| Method | Path                               | Action                                    |
+| :----: | ---------------------------------  | ----------------------------------------- |
+| `GET`  | `"/"`                              | Get all inbounds                          |
+| `GET`  | `"/get/:id"`                       | Get inbound with inbound.id               |
+| `GET`  | `"/createbackup"`                  | Telegram bot sends backup to admins       |
+| `POST` | `"/add"`                           | Add inbound                               |
+| `POST` | `"/del/:id"`                       | Delete Inbound                            |
+| `POST` | `"/update/:id"`                    | Update Inbound                            |
+| `POST` | `"/addClient/"`                    | Add Client to inbound                     |
+| `POST` | `"/:id/delClient/:clientId"`       | Delete Client by clientId\*               |
+| `POST` | `"/updateClient/:clientId"`        | Update Client by clientId\*               |
+| `GET`  | `"/getClientTraffics/:email"`      | Get Client's Traffic                      |
+| `POST` | `"/:id/resetClientTraffic/:email"` | Reset Client's Traffic                    |
+| `POST` | `"/resetAllTraffics"`              | Reset traffics of all inbounds            |
+| `POST` | `"/resetAllClientTraffics/:id"`    | Reset inbound clients traffics (-1: all)  |
+| `POST` | `"/delDepletedClients/:id"`        | Delete inbound depleted clients (-1: all) |
+| `POST` | `"/onlines"`                       | Get Online users ( list of emails )       |
 
 \*- The field `clientId` should be filled by:
 
@@ -141,7 +145,7 @@ docker build -t x-ui .
 - `client.password` for TROJAN
 - `client.email` for Shadowsocks
 
-# Environment Variables
+## Environment Variables
 
 | Variable       |                      Type                      | Default       |
 | -------------- | :--------------------------------------------: | :------------ |
@@ -150,12 +154,14 @@ docker build -t x-ui .
 | XUI_BIN_FOLDER |                    `string`                    | `"bin"`       |
 | XUI_DB_FOLDER  |                    `string`                    | `"/etc/x-ui"` |
 
-# Screenshot from Inbouds page
+## Screenshots
 
 ![inbounds](./media/inbounds.png)
 ![Dark inbounds](./media/inbounds-dark.png)
+![outbounds](./media/outbounds.png)
+![rules](./media/rules.png)
 
-## SSL certificate application
+## SSL Certificate Application
 
 <details>
   <summary>Click for details</summary>
@@ -172,7 +178,7 @@ certbot certonly --standalone --register-unsafely-without-email --non-interactiv
 
 </details>
 
-## Tg robot use
+## Telegram Bot
 
 <details>
   <summary>Click for details</summary>
@@ -202,7 +208,7 @@ Reference syntax:
 - Login notification
 - CPU threshold notification
 - Threshold for Expiration time and Traffic to report in advance
-- Support client report menu if client's telegram username added to the user's configurations
+- Support client report menu if client's telegram ID or telegram UserName added to the user's configurations
 - Support telegram traffic report searched with UUID (VMESS/VLESS) or Password (TROJAN) - anonymously
 - Menu based bot
 - Search client by email ( only admin )
@@ -213,18 +219,18 @@ Reference syntax:
 - Multi language bot
 </details>
 
-# T-Shoots:
+## T-Shoots
 
-**If you upgrade from an old version or other forks, for enable traffic for users you should do :**
+**Please be aware if you upgrade from an old X-UI version or other forks, by default data traffic usage for users may not work! it's recommended to follow below steps for enabeling:**
 
-find this in config :
+1. Find this section in config file
 
 ```json
  "policy": {
     "system": {
 ```
 
-**and add this just after ` "policy": {` :**
+2. Add below section just after ` "policy": {` :
 
 ```json
     "levels": {
@@ -235,7 +241,7 @@ find this in config :
     },
 ```
 
-**the final output is like :**
+- The final output is like:
 
 ```json
   "policy": {
@@ -254,7 +260,7 @@ find this in config :
   "routing": {
 ```
 
-restart panel
+3. Save and restart panel
 
 </details>
 
