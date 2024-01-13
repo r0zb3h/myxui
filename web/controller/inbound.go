@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"encoding/json"
 	"fmt"
 	"encoding/json"
 	"strconv"
@@ -44,6 +45,7 @@ func (a *InboundController) initRouter(g *gin.RouterGroup) {
 	g.POST("/resetAllTraffics", a.resetAllTraffics)
 	g.POST("/resetAllClientTraffics/:id", a.resetAllClientTraffics)
 	g.POST("/delDepletedClients/:id", a.delDepletedClients)
+	g.POST("/import", a.importInbound)
 	g.POST("/onlines", a.onlines)
 }
 

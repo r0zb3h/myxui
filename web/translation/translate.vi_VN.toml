@@ -32,7 +32,7 @@
 "transmission" = "Truyền tải"
 "host" = "Máy chủ"
 "path" = "Đường dẫn"
-"camouflage" = "Ngụy trang"
+"camouflage" = "Sự làm xáo trộn"
 "status" = "Trạng thái"
 "enabled" = "Đã kích hoạt"
 "disabled" = "Đã tắt"
@@ -60,10 +60,10 @@
 "settings" = "Cài đặt bảng điều khiển"
 "xray" = "Cài đặt Xray"
 "logout" = "Đăng xuất"
-"link" = "Khác"
+"link" = "Sự quản lý"
 
 [pages.login]
-"title" = "Đăng nhập"
+"title" = "Chào mừng"
 "loginAgain" = "Thời hạn đăng nhập đã hết, Vui lòng đăng nhập lại."
 
 [pages.login.toasts]
@@ -86,8 +86,8 @@
 "operationHours" = "Thời gian hoạt động"
 "operationHoursDesc" = "Thời gian hoạt động của hệ thống: thời gian kể từ khi khởi động."
 "systemLoad" = "Tải hệ thống"
-"connectionCount" = "Số lượng kết nối"
-"connectionCountDesc" = "Tổng số kết nối trên tất cả các thẻ mạng."
+"connectionTcpCountDesc" = "Tổng số kết nối TCP trên tất cả các card mạng."
+"connectionUdpCountDesc" = "Tổng số kết nối UDP trên tất cả các card mạng."
 "upSpeed" = "Tổng tốc độ tải lên cho tất cả các thẻ mạng."
 "downSpeed" = "Tổng tốc độ tải xuống cho tất cả các thẻ mạng."
 "totalSent" = "Tổng lưu lượng tải lên của tất cả các thẻ mạng kể từ khi khởi động hệ thống."
@@ -100,8 +100,8 @@
 "backup" = "Phục hồi dữ liệu đã lưu"
 "backupTitle" = "Sao lưu và Khôi phục cơ sở dữ liệu"
 "backupDescription" = "Bạn hãy nhớ sao lưu trước khi nhập cơ sở dữ liệu mới."
-"exportDatabase" = "Tải xuống cơ sở dữ liệu"
-"importDatabase" = "Tải lên cơ sở dữ liệu"
+"exportDatabase" = "Sao lưu"
+"importDatabase" = "Khôi phục"
 
 [pages.inbounds]
 "title" = "Điểm vào (Inbounds)"
@@ -167,9 +167,13 @@
 "emailDesc" = "vui lòng cung cấp một địa chỉ email duy nhất."
 "setDefaultCert" = "Đặt chứng chỉ từ bảng điều khiển"
 "telegramDesc" = "Sử dụng ID Telegram không có @ hoặc ID trò chuyện (bạn có thể lấy nó tại đây @userinfobot hoặc sử dụng lệnh '/id' trong bot)"
-"subscriptionDesc" = "Bạn có thể tìm thấy liên kết phụ của mình trên Chi tiết, bạn cũng có thể sử dụng cùng tên cho một số cấu hình"
+"subscriptionDesc" = "Bạn có thể tìm thấy liên kết phụ của mình trên Chi tiết, bạn cũng có thể sử dụng cùng tên cho một số khách hàng"
 "info" = "Thông tin"
 "same" = "Như nhau"
+"inboundData" = "Dữ liệu gửi đến"
+"copyToClipboard" = "Sao chép vào bảng nhớ tạm"
+"import" = "Nhập"
+"importInbound" = "Nhập hàng gửi về"
 
 [pages.client]
 "add" = "Thêm máy khách"
@@ -184,26 +188,27 @@
 "prefix" = "Tiền Tố (Được ưu đãi)"
 "postfix" = "Hậu tố"
 "delayedStart" = "Bắt đầu sau lần sử dụng đầu tiên"
-"expireDays" = "Số ngày hết hạn"
+"expireDays" = "Khoảng thời gian"
 "days" = "Ngày(s)"
 "renew" = "Tự động gia hạn"
-"renewDesc" = "Tự động gia hạn ngày sau khi hết hạn. 0 = tắt"
+"renewDesc" = "Tự động gia hạn sau khi hết hạn. (0 = tắt)(đơn vị: ngày)"
 
 [pages.inbounds.toasts]
 "obtain" = "Nhận được"
 
 [pages.inbounds.stream.general]
-"requestHeader" = "Tiêu đề yêu cầu"
+"request" = "Lời yêu cầu"
+"response" = "Phản ứng"
 "name" = "Tên"
 "value" = "Giá trị"
 
 [pages.inbounds.stream.tcp]
-"requestVersion" = "Phiên bản yêu cầu"
-"requestMethod" = "Phương thức yêu cầu"
-"requestPath" = "Đường dẫn yêu cầu"
-"responseVersion" = "Phiên bản phản hồi"
-"responseStatus" = "Trạng thái phản hồi"
-"responseStatusDescription" = "Mô tả trạng thái phản hồi"
+"version" = "Phiên bản"
+"method" = "Phương pháp"
+"path" = "Con đường"
+"status" = "Trạng thái"
+"statusDescription" = "Tình trạng Mô tả"
+"requestHeader" = "Tiêu đề yêu cầu"
 "responseHeader" = "Tiêu đề phản hồi"
 
 [pages.inbounds.stream.quic]
@@ -233,6 +238,8 @@
 "panelUrlPathDesc" = "Phải bắt đầu bằng '/' và kết thúc bằng."
 "pageSize" = "Kích thước phân trang"
 "pageSizeDesc" = "Xác định kích thước trang cho bảng gửi đến. Đặt 0 để tắt"
+"remarkModel" = "Ghi chú mô hình và ký tự phân tách"
+"sampleRemark" = "Nhận xét mẫu"
 "oldUsername" = "Tên người dùng hiện tại"
 "currentPassword" = "Mật khẩu hiện tại"
 "newUsername" = "Tên người dùng mới"
@@ -306,6 +313,8 @@
 "directCountryConfigsDesc" = "Những tùy chọn này sẽ kết nối người dùng trực tiếp đến các tên miền quốc gia cụ thể."
 "ipv4Configs" = "Cấu hình IPv4"
 "ipv4ConfigsDesc" = "Những tùy chọn này sẽ chỉ định kết nối đến các tên miền mục tiêu qua IPv4."
+"warpConfigs" = "Cấu hình WARP"
+"warpConfigsDesc" = "WARP sẽ định tuyến lưu lượng đến các trang web qua máy chủ Cloudflare."
 "Template" = "Mẫu cấu hình Xray"
 "TemplateDesc" = "Tạo tệp cấu hình Xray cuối cùng dựa trên mẫu này."
 "FreedomStrategy" = "Cấu hình chiến lược cho giao thức tự do"
@@ -348,6 +357,14 @@
 "GoogleIPv4Desc" = "Thêm định tuyến để Google kết nối với IPv4."
 "NetflixIPv4" = "Sử dụng IPv4 cho Netflix"
 "NetflixIPv4Desc" = "Thêm định tuyến cho Netflix để kết nối với IPv4."
+"GoogleWARP" = "Định tuyến Google qua WARP."
+"GoogleWARPDesc" = "Thêm định tuyến cho Google qua WARP."
+"OpenAIWARP" = "Định tuyến OpenAI (ChatGPT) qua WARP."
+"OpenAIWARPDesc" = "Thêm định tuyến cho OpenAI (ChatGPT) qua WARP."
+"NetflixWARP" = "Định tuyến Netflix qua WARP."
+"NetflixWARPDesc" = "Thêm định tuyến cho Netflix qua WARP."
+"SpotifyWARP" = "Định tuyến Spotify qua WARP."
+"SpotifyWARPDesc" = "Thêm định tuyến cho Spotify qua WARP."
 "completeTemplate" = "Tất cả"
 "Inbounds" = "Đầu vào"
 "Outbounds" = "Đầu ra"
@@ -382,6 +399,14 @@
 "bridge" = "Liên kết"
 "portal" = "Cổng thông tin"
 "intercon" = "Kết nối"
+
+[pages.xray.wireguard]
+"secretKey" = "Chìa khoá bí mật"
+"publicKey" = "Khóa công khai"
+"allowedIPs" = "IP được phép"
+"endpoint" = "Điểm cuối"
+"psk" = "Khóa chia sẻ"
+"domainStrategy" = "Chiến lược tên miền"
 
 [tgbot]
 "noResult" = "❗ Không có kết quả!"

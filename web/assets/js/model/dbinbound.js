@@ -56,6 +56,10 @@ class DBInbound {
         return this.protocol === Protocols.HTTP;
     }
 
+    get isWireguard() {
+        return this.protocol === Protocols.WIREGUARD;
+    }
+
     get address() {
         let address = location.hostname;
         if (!ObjectUtil.isEmpty(this.listen) && this.listen !== "0.0.0.0") {
@@ -137,8 +141,8 @@ class DBInbound {
         }
     }
     
-	get genInboundLinks() {
+	genInboundLinks(remarkModel) {
         const inbound = this.toInbound();
-        return inbound.genInboundLinks(this.remark);
+        return inbound.genInboundLinks(this.remark,remarkModel);
     }
 }

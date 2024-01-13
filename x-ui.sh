@@ -115,6 +115,24 @@ update() {
     fi
 }
 
+custom_version() {
+    echo "Enter the panel version (like 1.6.0):"
+    read panel_version
+
+    if [ -z "$panel_version" ]; then
+        echo "Panel version cannot be empty. Exiting."
+    exit 1
+    fi
+
+    download_link="https://raw.githubusercontent.com/alireza0/x-ui/master/install.sh"
+
+    # Use the entered panel version in the download link
+    install_command="bash <(curl -Ls $download_link) $panel_version"
+
+    echo "Downloading and installing panel version $panel_version..."
+    eval $install_command
+}
+
 uninstall() {
     confirm "Are you sure you want to uninstall the panel? xray will also uninstalled!" "n"
     if [[ $? != 0 ]]; then
@@ -283,12 +301,6 @@ show_log() {
     fi
 }
 
-migrate_v2_ui() {
-    /usr/local/x-ui/x-ui v2-ui
-
-    before_show_menu
-}
-
 install_bbr() {
     # temporary workaround for installing bbr
     bash <(curl -L -s https://raw.githubusercontent.com/teddysun/across/master/bbr.sh)
@@ -362,7 +374,7 @@ show_status() {
     check_status
     case $? in
     0)
-        echo -e "Panel state: ${green}Runing${plain}"
+        echo -e "Panel state: ${green}Running${plain}"
         show_enable_status
         ;;
     1)
@@ -397,7 +409,7 @@ check_xray_status() {
 show_xray_status() {
     check_xray_status
     if [[ $? == 0 ]]; then
-        echo -e "xray state: ${green}Runing${plain}"
+        echo -e "xray state: ${green}Running${plain}"
     else
         echo -e "xray state: ${red}Not Running${plain}"
     fi
@@ -612,22 +624,59 @@ ssl_cert_issue_CF() {
     fi
 }
 
+update_geo() {
+    cd /usr/local/x-ui/bin
+    echo -e "${green}\t1.${plain} Update Geofiles [Recommended choice] "
+    echo -e "${green}\t2.${plain} Download from optional jsDelivr CDN "
+    echo -e "${green}\t0.${plain} Back To Main Menu "
+    read -p "Select: " select
+
+    case "$select" in
+        0)
+            show_menu
+            ;;
+
+        1)
+            wget -N "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat" && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget -N "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat" && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget "https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geoip.dat" -O /tmp/wget && mv /tmp/wget geoip_IR.dat && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget "https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geosite.dat" -O /tmp/wget && mv /tmp/wget geosite_IR.dat && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            echo -e "${green}Files are updated.${plain}"
+            confirm_restart
+            ;;
+
+        2)
+            wget -N "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geoip.dat" && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget -N "https://cdn.jsdelivr.net/gh/Loyalsoldier/v2ray-rules-dat@release/geosite.dat" && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget "https://cdn.jsdelivr.net/gh/chocolate4u/Iran-v2ray-rules@release/geoip.dat" -O /tmp/wget && mv /tmp/wget geoip_IR.dat && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            wget "https://cdn.jsdelivr.net/gh/chocolate4u/Iran-v2ray-rules@release/geosite.dat" -O /tmp/wget && mv /tmp/wget geosite_IR.dat && echo -e "${green}Success${plain}\n" || echo -e "${red}Failure${plain}\n"
+            echo -e "${green}Files are updated.${plain}"
+            confirm_restart
+            ;;
+
+        *)
+            LOGE "Please enter a correct number [0-2]\n"
+            update_geo
+            ;;
+    esac
+}
+
 show_usage() {
     echo "X-UI Control Menu Usage"
     echo "------------------------------------------"
     echo "SUBCOMMANDS:" 
-    echo "x-ui              - Admin management script"
-    echo "x-ui start        - Start X-UI"
-    echo "x-ui stop         - Stop X-UI"
-    echo "x-ui restart      - Restart X-UI"
-    echo "x-ui status       - Current X-UI status"
-    echo "x-ui enable       - Enable X-UI on system startup"
-    echo "x-ui disable      - Disable X-UI on system startup"
-    echo "x-ui log          - Check X-UI logs"
-    echo "x-ui update       - Update X-UI"
-    echo "x-ui install      - Install X-UI"
-    echo "x-ui uninstall    - Uninstall X-UI"
-    echo "x-ui help         - Control menu usage"
+    echo "x-ui              - Admin Management Script"
+    echo "x-ui start        - Start"
+    echo "x-ui stop         - Stop"
+    echo "x-ui restart      - Restart"
+    echo "x-ui status       - Current Status"
+    echo "x-ui enable       - Enable Autostart on OS Startup"
+    echo "x-ui disable      - Disable Autostart on OS Startup"
+    echo "x-ui log          - Check Logs"
+    echo "x-ui update       - Update"
+    echo "x-ui install      - Install"
+    echo "x-ui uninstall    - Uninstall"
+    echo "x-ui help         - Control Menu Usage"
     echo "------------------------------------------"
 }
 
@@ -637,31 +686,33 @@ show_menu() {
 ————————————————
   ${green}0.${plain} Exit 
 ————————————————
-  ${green}1.${plain} Install X-UI
-  ${green}2.${plain} Update X-UI
-  ${green}3.${plain} Uninstall X-UI
+  ${green}1.${plain} Install
+  ${green}2.${plain} Update
+  ${green}3.${plain} Custom Version
+  ${green}4.${plain} Uninstall
 ————————————————
-  ${green}4.${plain} Reset Username and Password
-  ${green}5.${plain} Reset Panel Settings
-  ${green}6.${plain} Set Panel Port
-  ${green}7.${plain} View Current Panel Settings
+  ${green}5.${plain} Reset Username and Password
+  ${green}6.${plain} Reset Panel Settings
+  ${green}7.${plain} Set Panel Port
+  ${green}8.${plain} View Panel Settings
 ————————————————
-  ${green}8.${plain} Start X-UI
-  ${green}9.${plain} Stop X-UI
-  ${green}10.${plain} Restart X-UI
-  ${green}11.${plain} Check X-UI State
-  ${green}12.${plain} Check X-UI Logs
+  ${green}9.${plain} Start
+  ${green}10.${plain} Stop
+  ${green}11.${plain} Restart
+  ${green}12.${plain} Check State
+  ${green}13.${plain} Check Logs
 ————————————————
-  ${green}13.${plain} Set X-UI Autostart
-  ${green}14.${plain} Cancel X-UI Autostart
+  ${green}14.${plain} Enable Autostart
+  ${green}15.${plain} Disable Autostart
 ————————————————
-  ${green}15.${plain} 一A Key Installation BBR (latest kernel)
-  ${green}16.${plain} 一SSL Certificate Management
-  ${green}17.${plain} 一Cloudflare SSL Certificate
+  ${green}16.${plain} A Key Installation BBR (latest kernel)
+  ${green}17.${plain} SSL Certificate Management
+  ${green}18.${plain} Cloudflare SSL Certificate
+  ${green}19.${plain} Update Geo Files
 ————————————————
  "
     show_status
-    echo && read -p "Please enter your selection [0-17]: " num
+    echo && read -p "Please enter your selection [0-19]: " num
 
     case "${num}" in
     0)
@@ -674,52 +725,58 @@ show_menu() {
         check_install && update
         ;;
     3)
-        check_install && uninstall
+        check_install && custom_version
         ;;
     4)
-        check_install && reset_user
+        check_install && uninstall
         ;;
     5)
-        check_install && reset_config
+        check_install && reset_user
         ;;
     6)
-        check_install && set_port
+        check_install && reset_config
         ;;
     7)
-        check_install && check_config
+        check_install && set_port
         ;;
     8)
-        check_install && start
+        check_install && check_config
         ;;
     9)
-        check_install && stop
+        check_install && start
         ;;
     10)
-        check_install && restart
+        check_install && stop
         ;;
     11)
-        check_install && status
+        check_install && restart
         ;;
     12)
-        check_install && show_log
+        check_install && status
         ;;
     13)
-        check_install && enable
+        check_install && show_log
         ;;
     14)
-        check_install && disable
+        check_install && enable
         ;;
     15)
-        install_bbr
+        check_install && disable
         ;;
     16)
-        ssl_cert_issue_main
+        install_bbr
         ;;
     17)
+        ssl_cert_issue_main
+        ;;
+    18)
         ssl_cert_issue_CF
         ;;
+    19)
+        update_geo
+        ;;
     *)
-        LOGE "Please enter the correct number [0-17]"
+        LOGE "Please enter the correct number [0-19]"
         ;;
     esac
 }
@@ -746,9 +803,6 @@ if [[ $# > 0 ]]; then
         ;;
     "log")
         check_install 0 && show_log 0
-        ;;
-    "v2-ui")
-        check_install 0 && migrate_v2_ui 0
         ;;
     "update")
         check_install 0 && update 0

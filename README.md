@@ -6,23 +6,16 @@
 [![Downloads](https://img.shields.io/github/downloads/r0zb3h/myxui/total.svg)](https://img.shields.io/github/downloads/r0zb3h/myxui/total.svg)
 [![License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?longCache=true)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
-> **Disclaimer: This project is only for personal learning and communication, please do not use it for illegal purposes, please do not use it in a production environment**
+> **Disclaimer:** This project is only for personal learning and communication, please do not use it for illegal purposes, please do not use it in a production environment
 
-**Xray Panel Supporting Multi-Protocol, Multi-lang (English,Farsi,Chinese,Russian)**
+**If you think this project is helpful to you, you may wish to give a**:star2:
 
-| Features                             |      Enable?       |
-| ------------------------------------ | :----------------: |
-| Multi-lang                           | :heavy_check_mark: |
-| Dark/Light Theme                     | :heavy_check_mark: |
-| Search in deep                       | :heavy_check_mark: |
-| Inbound Multi User                   | :heavy_check_mark: |
-| Multi User Traffic & Expiration time | :heavy_check_mark: |
-| REST API                             | :heavy_check_mark: |
-| Telegram BOT (admin + clients)       | :heavy_check_mark: |
-| Backup database using Telegram BOT   | :heavy_check_mark: |
-| Subscription link + userInfo         | :heavy_check_mark: |
-| Calculate expire date on first usage | :heavy_check_mark: |
-| Show Online Clients                  | :heavy_check_mark: |
+<img width="125" alt="image"
+src="https://github.com/alireza0/x-ui/assets/115543613/dd4f10dd-8bb0-40cf-846f-1fe1de7a6275">
+
+- USDT (TRC20): `TYTq73Gj6dJ67qe58JVPD9zpjW2cc9XgVz`
+- Tezos (XTZ):
+`tz2Wnh2SsY1eezXrcLChu6idWpgdHzUFQcts`
 
 
 
@@ -35,7 +28,7 @@ bash <(curl -Ls https://raw.githubusercontent.com/r0zb3h/myxui/master/install.sh
 
 ## Install Custom Version
 
-To install your desired version you can add the version to the end of install command. Example for ver `0.5.2`:
+**Step 1:** To install your desired version, add the version to the end of the installation command. e.g., ver `1.6.4`:
 
 ```sh
 bash <(curl -Ls https://raw.githubusercontent.com/r0zb3h/myxui/master/install.sh) 0.5.2
@@ -63,15 +56,22 @@ systemctl enable x-ui
 systemctl restart x-ui
 ```
 
-## Install Using Docker
+</details>
 
-1. Install Docker
+## Install using Docker
+
+<details>
+   <summary>Click for details</summary>
+
+### Usage
+
+**Step 1:** Install Docker
 
 ```shell
 curl -fsSL https://get.docker.com | sh
 ```
 
-2. Install X-UI
+**Step 2:** Install X-UI
 
 ```shell
 mkdir x-ui && cd x-ui
@@ -90,24 +90,33 @@ docker run -itd \
 docker build -t x-ui .
 ```
 
+</details>
+
+## Languages
+
+- English
+- Chinese
+- Farsi
+- Russian
+- Vietnamese
+
 ## Features
 
-- System Status Monitoring
-- Search within all inbounds and clients
-- Support Dark/Light theme UI
-- Support multi-user multi-protocol, web page visualization operation
-- Support multi-domain configuration and multi-certificate inbounds
-- Supported protocols: vmess, vless, trojan, shadowsocks, dokodemo-door, socks, http
-- Support for configuring more transport configurations
-- Traffic statistics, limit traffic, limit expiration time
-- Customizable xray configuration templates
-- Support subscription ( multi ) link
-- Detect users which are expiring or exceed traffic limit soon
-- Support https access panel (self-provided domain name + ssl certificate)
-- Support one-click SSL certificate application and automatic renewal
-- For more advanced configuration items, please refer to the panel
-- Support export/import database from panel
-- Show online users
+- Supports protocols including VLESS, VMess, Trojan, Shadowsocks, Dokodemo-door, SOCKS, HTTP, Wireguard
+- Supports XTLS protocols, including Vision and REALITY
+- An advanced interface for routing traffic, incorporating PROXY Protocol, Reverse, External, and Transparent Proxy, along with Multi-Domain, SSL Certificate, and Port
+- Support auto generate Cloudflare WARP using Wireguard outbound
+- An interactive JSON interface for Xray template configuration
+- An advanced interface for inbound and outbound configuration
+- Clients’ traffic cap and expiration date based on first use
+- Displays online clients, traffic statistics, and system status monitoring
+- Deep database search
+- Displays depleted clients with expired dates or exceeded traffic cap
+- Subscription service with (multi)link
+- Importing and exporting databases
+- One-Click SSL certificate application and automatic renewal
+- HTTPS for secure access to the web panel and subscription service (self-provided domain + SSL certificate)
+- Dark/Light theme
 
 ## Recommended OS
 
@@ -116,7 +125,21 @@ docker build -t x-ui .
 - Debian 10+
 - Fedora 36+
 
+## Preview
+
+![inbounds](./media/inbounds.png)
+![Dark inbounds](./media/inbounds-dark.png)
+![outbounds](./media/outbounds.png)
+![rules](./media/rules.png)
+![warp](./media/warp.png)
+
+
 ## API Routes
+
+<details>
+  <summary>Click for details</summary>
+
+### Usage
 
 - `/login` with `PUSH` user data: `{username: '', password: ''}` for login
 - `/xui/API/inbounds` base for following actions:
@@ -127,25 +150,32 @@ docker build -t x-ui .
 | `GET`  | `"/get/:id"`                       | Get inbound with inbound.id               |
 | `GET`  | `"/createbackup"`                  | Telegram bot sends backup to admins       |
 | `POST` | `"/add"`                           | Add inbound                               |
-| `POST` | `"/del/:id"`                       | Delete Inbound                            |
-| `POST` | `"/update/:id"`                    | Update Inbound                            |
-| `POST` | `"/addClient/"`                    | Add Client to inbound                     |
-| `POST` | `"/:id/delClient/:clientId"`       | Delete Client by clientId\*               |
-| `POST` | `"/updateClient/:clientId"`        | Update Client by clientId\*               |
-| `GET`  | `"/getClientTraffics/:email"`      | Get Client's Traffic                      |
-| `POST` | `"/:id/resetClientTraffic/:email"` | Reset Client's Traffic                    |
+| `POST` | `"/del/:id"`                       | Delete inbound                            |
+| `POST` | `"/update/:id"`                    | Update inbound                            |
+| `POST` | `"/addClient/"`                    | Add client to inbound                     |
+| `POST` | `"/:id/delClient/:clientId"`       | Delete client by clientId\*               |
+| `POST` | `"/updateClient/:clientId"`        | Update client by clientId\*               |
+| `GET`  | `"/getClientTraffics/:email"`      | Get client's traffic                      |
+| `POST` | `"/:id/resetClientTraffic/:email"` | Reset client's traffic                    |
 | `POST` | `"/resetAllTraffics"`              | Reset traffics of all inbounds            |
 | `POST` | `"/resetAllClientTraffics/:id"`    | Reset inbound clients traffics (-1: all)  |
 | `POST` | `"/delDepletedClients/:id"`        | Delete inbound depleted clients (-1: all) |
-| `POST` | `"/onlines"`                       | Get Online users ( list of emails )       |
+| `POST` | `"/onlines"`                       | Get online users ( list of emails )       |
 
 \*- The field `clientId` should be filled by:
 
-- `client.id` for VMESS and VLESS
-- `client.password` for TROJAN
+- `client.id` for VMess and VLESS
+- `client.password` for Trojan
 - `client.email` for Shadowsocks
 
+</details>
+
 ## Environment Variables
+
+<details>
+  <summary>Click for details</summary>
+
+### Usage
 
 | Variable       |                      Type                      | Default       |
 | -------------- | :--------------------------------------------: | :------------ |
@@ -154,17 +184,23 @@ docker build -t x-ui .
 | XUI_BIN_FOLDER |                    `string`                    | `"bin"`       |
 | XUI_DB_FOLDER  |                    `string`                    | `"/etc/x-ui"` |
 
-## Screenshots
+</details>
 
-![inbounds](./media/inbounds.png)
-![Dark inbounds](./media/inbounds-dark.png)
-![outbounds](./media/outbounds.png)
-![rules](./media/rules.png)
-
-## SSL Certificate Application
+## SSL Certificate
 
 <details>
   <summary>Click for details</summary>
+
+### Cloudflare 
+
+The admin management script has a built-in SSL certificate application for Cloudflare. To use this script to apply for a certificate, you need the following:
+
+- Cloudflare registered email
+- Cloudflare Global API Key
+- The domain name has been resolved to the current server through cloudflare
+
+**Step 1:** Run the`x-ui`command on the server's terminal and then choose `17`. Then enter the information as requested.
+
 
 ### Certbot
 
@@ -183,85 +219,102 @@ certbot certonly --standalone --register-unsafely-without-email --non-interactiv
 <details>
   <summary>Click for details</summary>
 
-X-UI supports daily traffic notification, panel login reminder and other functions through the Tg robot. To use the Tg robot, you need to apply for the specific application tutorial. You can refer to the [blog](https://coderfan.net/how-to-use-telegram-bot-to-alarm-you-when-someone-login-into-your-vps.html)
-Set the robot-related parameters in the panel background, including:
+### Usage
 
-- Tg robot Token
-- Tg robot ChatId
-- Tg robot cycle runtime, in crontab syntax
-- Tg robot Expiration threshold
-- Tg robot Traffic threshold
-- Tg robot Enable send backup in cycle runtime
-- Tg robot Enable CPU usage alarm threshold
+The web panel supports daily traffic, panel login, database backup, system status, client info, and other notification and functions through the Telegram Bot. To use the bot, you need to set the bot-related parameters in the panel, including:
+
+- Telegram Token
+- Admin Chat ID(s)
+- Notification Time (in cron syntax)
+- Database Backup
+- CPU Load Threshold Notification
+
+**Crontab Time Format**
 
 Reference syntax:
 
-- 30 \* \* \* \* \* //Notify at the 30s of each point
-- 0 \*/10 \* \* \* \* //Notify at the first second of each 10 minutes
-- @hourly // hourly notification
-- @daily // Daily notification (00:00 in the morning)
-- @every 8h // notify every 8 hours
+- `*/30 * * * *` - Notify every 30 minutes, every hour
+- `30 * * * * *` - Notify at the 30th second of each minute
+- `0 */10 * * * *` - Notify at the start of every 10 minutes
+- `@hourly` - Hourly notification
+- `@daily` - Daily notification (00:00 AM)
+- `@every 8h` - Notify every 8 hours
 
-### Telegram Bot Features
+For more info about [Crontab](https://acquia.my.site.com/s/article/360004224494-Cron-time-string-format)
 
-- Report periodic
-- Login notification
-- CPU threshold notification
-- Threshold for Expiration time and Traffic to report in advance
-- Support client report menu if client's telegram ID or telegram UserName added to the user's configurations
-- Support telegram traffic report searched with UUID (VMESS/VLESS) or Password (TROJAN) - anonymously
-- Menu based bot
-- Search client by email ( only admin )
-- Check all inbounds
-- Check server status
-- Check depleted users
-- Receive backup by request and in periodic reports
-- Multi language bot
+### Features
+
+- Periodic reporting
+- Login notifications
+- CPU load threshold notifications
+- Advance notifications for expiration time and traffic
+- Client reporting menu with Telegram ID or username in configurations
+- Anonymous traffic reports, search by UUID (VLESS/VMess) or Password (Trojan/Shadowsocks)
+- Menu-based bot
+- Client search by email (admin only)
+- Inbound checks
+- System status check
+- Depleted client checks
+- Backup on request and in periodic reports
+- Multilingual support
 </details>
 
-## T-Shoots
+## Troubleshoots
 
-**Please be aware if you upgrade from an old X-UI version or other forks, by default data traffic usage for users may not work! it's recommended to follow below steps for enabeling:**
+<details>
+  <summary>Click for details</summary>
 
-1. Find this section in config file
+### Enable Traffic Usage
 
-```json
- "policy": {
-    "system": {
-```
+If you are upgrading from an older version or other forks and find that data traffic usage for clients may not work by default, follow the steps below to enable it:
 
-2. Add below section just after ` "policy": {` :
+**Step 1: Locate the Configuration Section**
 
-```json
-    "levels": {
-      "0": {
-        "statsUserUplink": true,
-        "statsUserDownlink": true
-      }
-    },
-```
-
-- The final output is like:
+Find the following section in the config file:
 
 ```json
   "policy": {
-    "levels": {
-      "0": {
-        "statsUserUplink": true,
-        "statsUserDownlink": true
-      }
-    },
-
     "system": {
-      "statsInboundDownlink": true,
-      "statsInboundUplink": true
+      // Other policy configurations
     }
   },
-  "routing": {
 ```
+**Step 2: Add the Required Configuration**
 
-3. Save and restart panel
+Add the following section just after `"policy": {`:
 
+```json
+"levels": {
+  "0": {
+    "statsUserUplink": true,
+    "statsUserDownlink": true
+  }
+},
+```
+**Step 3: Final Configuration**
+
+Your final config should look like this:
+
+```json
+"policy": {
+  "levels": {
+    "0": {
+      "statsUserUplink": true,
+      "statsUserDownlink": true
+    }
+  },
+  "system": {
+    "statsInboundDownlink": true,
+    "statsInboundUplink": true
+  }
+},
+"routing": {
+  // Other routing configurations
+},
+```
+**Step 4: Save and Restart**
+
+Save your changes and restart the Xray Service
 </details>
 
 # a special thanks to

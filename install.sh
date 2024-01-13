@@ -23,25 +23,15 @@ else
 fi
 echo "The OS release is: $release"
 
-arch=$(arch)
-
-if [[ $arch == "x86_64" || $arch == "x64" || $arch == "amd64" ]]; then
-    arch="amd64"
-elif [[ $arch == "aarch64" || $arch == "arm64" ]]; then
-    arch="arm64"
-elif [[ $arch == "s390x" ]]; then
-    arch="s390x"
-else
-    arch="amd64"
-    echo -e "${red} Failed to check system arch, will use default arch: ${arch}${plain}"
-fi
-
-echo "arch: ${arch}"
-
-if [ $(getconf WORD_BIT) != '32' ] && [ $(getconf LONG_BIT) != '64' ]; then
-    echo "x-ui dosen't support 32-bit(x86) system, please use 64 bit operating system(x86_64) instead, if there is something wrong, please get in touch with me!"
-    exit -1
-fi
+arch() {
+    case "$(uname -m)" in
+    x86_64 | x64 | amd64) echo 'amd64' ;;
+    armv8* | armv8 | arm64 | aarch64) echo 'arm64' ;;
+    armv7* | armv7 | arm | arm32 ) echo 'arm' ;;
+    *) echo -e "${green}Unsupported CPU architecture! ${plain}" && rm -f install.sh && exit 1 ;;
+    esac
+}
+echo "arch: $(arch)"
 
 os_version=""
 os_version=$(grep -i version_id /etc/os-release | cut -d \" -f2 | cut -d . -f1)
@@ -124,7 +114,7 @@ install_x-ui() {
         echo -e "Got x-ui latest version: ${last_version}, beginning the installation..."
         wget -N --no-check-certificate -O /usr/local/x-ui-linux-${arch}.tar.gz https://github.com/r0zb3h/myxui/releases/download/${last_version}/x-ui-linux-${arch}.tar.gz
         if [[ $? -ne 0 ]]; then
-            echo -e "${red}Dowanloading x-ui failed, please be sure that your server can access Github ${plain}"
+            echo -e "${red}Downloading x-ui failed, please be sure that your server can access Github ${plain}"
             exit 1
         fi
     else
@@ -133,7 +123,7 @@ install_x-ui() {
         echo -e "Begining to install x-ui v$1"
         wget -N --no-check-certificate -O /usr/local/x-ui-linux-${arch}.tar.gz ${url}
         if [[ $? -ne 0 ]]; then
-            echo -e "${red}dowanload x-ui v$1 failed,please check the verison exists${plain}"
+            echo -e "${red}download x-ui v$1 failed,please check the version exists${plain}"
             exit 1
         fi
     fi
@@ -143,10 +133,10 @@ install_x-ui() {
         rm /usr/local/x-ui/ -rf
     fi
 
-    tar zxvf x-ui-linux-${arch}.tar.gz
-    rm x-ui-linux-${arch}.tar.gz -f
+    tar zxvf x-ui-linux-$(arch).tar.gz
+    rm x-ui-linux-$(arch).tar.gz -f
     cd x-ui
-    chmod +x x-ui bin/xray-linux-${arch}
+    chmod +x x-ui bin/xray-linux-$(arch)
     cp -f x-ui.service /etc/systemd/system/
     wget --no-check-certificate -O /usr/bin/x-ui https://raw.githubusercontent.com/r0zb3h/myxui/main/x-ui.sh
     chmod +x /usr/local/x-ui/x-ui.sh
@@ -163,22 +153,24 @@ install_x-ui() {
     systemctl start x-ui
     echo -e "${green}x-ui v${last_version}${plain} installation finished, it is up and running now..."
     echo -e ""
-    echo -e "x-ui control menu usages: "
-    echo -e "----------------------------------------------"
-    echo -e "x-ui              - Enter     Admin menu"
-    echo -e "x-ui start        - Start     x-ui"
-    echo -e "x-ui stop         - Stop      x-ui"
-    echo -e "x-ui restart      - Restart   x-ui"
-    echo -e "x-ui status       - Show      x-ui status"
-    echo -e "x-ui enable       - Enable    x-ui on system startup"
-    echo -e "x-ui disable      - Disable   x-ui on system startup"
-    echo -e "x-ui log          - Check     x-ui logs"
-    echo -e "x-ui update       - Update    x-ui"
-    echo -e "x-ui install      - Install   x-ui"
-    echo -e "x-ui uninstall    - Uninstall x-ui"
-    echo -e "----------------------------------------------"
+    echo "X-UI Control Menu Usage"
+    echo "------------------------------------------"
+    echo "SUBCOMMANDS:" 
+    echo "x-ui              - Admin Management Script"
+    echo "x-ui start        - Start"
+    echo "x-ui stop         - Stop"
+    echo "x-ui restart      - Restart"
+    echo "x-ui status       - Current Status"
+    echo "x-ui enable       - Enable Autostart on OS Startup"
+    echo "x-ui disable      - Disable Autostart on OS Startup"
+    echo "x-ui log          - Check Logs"
+    echo "x-ui update       - Update"
+    echo "x-ui install      - Install"
+    echo "x-ui uninstall    - Uninstall"
+    echo "x-ui help         - Control Menu Usage"
+    echo "------------------------------------------"
 }
 
-echo -e "${green}Excuting...${plain}"
+echo -e "${green}Running...${plain}"
 install_base
 install_x-ui $1

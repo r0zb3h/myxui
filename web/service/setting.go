@@ -34,6 +34,7 @@ var defaultValueMap = map[string]string{
 	"pageSize":           "0",
 	"expireDiff":         "0",
 	"trafficDiff":        "0",
+	"remarkModel":        "-ieo",
 	"timeLocation":       "Asia/Tehran",
 	"tgBotEnable":        "false",
 	"tgBotToken":         "",
@@ -54,6 +55,7 @@ var defaultValueMap = map[string]string{
 	"subEncrypt":         "true",
 	"subShowInfo":        "false",
 	"subURI":             "",
+	"warp":               "",
 }
 
 type SettingService struct {
@@ -295,6 +297,10 @@ func (s *SettingService) GetSessionMaxAge() (int, error) {
 	return s.getInt("sessionMaxAge")
 }
 
+func (s *SettingService) GetRemarkModel() (string, error) {
+	return s.getString("remarkModel")
+}
+
 func (s *SettingService) GetSecret() ([]byte, error) {
 	secret, err := s.getString("secret")
 	if secret == defaultValueMap["secret"] {
@@ -392,6 +398,13 @@ func (s *SettingService) GetSubURI() (string, error) {
 	return s.getString("subURI")
 }
 
+func (s *SettingService) GetWarp() (string, error) {
+	return s.getString("warp")
+}
+func (s *SettingService) SetWarp(data string) error {
+	return s.setString("warp", data)
+}
+
 func (s *SettingService) UpdateAllSetting(allSetting *entity.AllSetting) error {
 	if err := allSetting.CheckValid(); err != nil {
 		return err
@@ -433,6 +446,7 @@ func (s *SettingService) GetDefaultSettings(host string) (interface{}, error) {
 		"tgBotEnable": func() (interface{}, error) { return s.GetTgbotenabled() },
 		"subEnable":   func() (interface{}, error) { return s.GetSubEnable() },
 		"subURI":      func() (interface{}, error) { return s.GetSubURI() },
+		"remarkModel": func() (interface{}, error) { return s.GetRemarkModel() },
 	}
 
 	result := make(map[string]interface{})

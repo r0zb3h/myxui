@@ -1,21 +1,30 @@
 #!/bin/sh
-if [ $1 == "amd64" ]; then
-    ARCH="64";
-    FNAME="amd64";
-elif [ $1 == "arm64" ]; then
-    ARCH="arm64-v8a"
-    FNAME="arm64";
-else
-    ARCH="64";
-    FNAME="amd64";
-fi
+case $1 in
+    amd64)
+        ARCH="64"
+        FNAME="amd64"
+        ;;
+    armv8 | arm64 | aarch64)
+        ARCH="arm64-v8a"
+        FNAME="arm64"
+        ;;
+    armv7 | arm | arm32)
+        ARCH="arm32-v7a"
+        FNAME="arm32"
+        ;;
+    *)
+        ARCH="64"
+        FNAME="amd64"
+        ;;
+esac
 mkdir -p build/bin
 cd build/bin
-wget "https://github.com/XTLS/Xray-core/releases/download/v1.8.6/Xray-linux-${ARCH}.zip"
+wget "https://github.com/XTLS/Xray-core/releases/download/v1.8.7/Xray-linux-${ARCH}.zip"
 unzip "Xray-linux-${ARCH}.zip"
-rm -f "Xray-linux-${ARCH}.zip" geoip.dat geosite.dat iran.dat
+rm -f "Xray-linux-${ARCH}.zip" geoip.dat geosite.dat LICENSE README.md
 mv xray "xray-linux-${FNAME}"
 wget "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat"
 wget "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat"
-wget "https://github.com/Masterkia/iran-hosted-domains/releases/latest/download/iran.dat"
+wget -O geoip_IR.dat https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geoip.dat
+wget -O geosite_IR.dat https://github.com/chocolate4u/Iran-v2ray-rules/releases/latest/download/geosite.dat
 cd ../../

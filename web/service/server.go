@@ -363,14 +363,6 @@ func (s *ServerService) UpdateXray(version string) error {
 	if err != nil {
 		return err
 	}
-	err = copyZipFile("geosite.dat", xray.GetGeositePath())
-	if err != nil {
-		return err
-	}
-	err = copyZipFile("geoip.dat", xray.GetGeoipPath())
-	if err != nil {
-		return err
-	}
 
 	return nil
 
@@ -418,6 +410,11 @@ func (s *ServerService) GetConfigJson() (interface{}, error) {
 }
 
 func (s *ServerService) GetDb() ([]byte, error) {
+	// Update by manually trigger a checkpoint operation
+	err := database.Checkpoint()
+	if err != nil {
+		return nil, err
+	}
 	// Open the file for reading
 	file, err := os.Open(config.GetDBPath())
 	if err != nil {

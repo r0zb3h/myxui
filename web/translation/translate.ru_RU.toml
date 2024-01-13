@@ -32,7 +32,7 @@
 "transmission" = "Протокол передачи"
 "host" = "Хост"
 "path" = "Путь"
-"camouflage" = "Маскировка"
+"camouflage" = "Затемнение"
 "status" = "Статус"
 "enabled" = "Включено"
 "disabled" = "Отключено"
@@ -60,10 +60,10 @@
 "settings" = "Настройки"
 "xray" = "Xray Настройки"
 "logout" = "Выйти"
-"link" = "Другое"
+"link" = "Менеджмент"
 
 [pages.login]
-"title" = "Войти"
+"title" = "Добро пожаловать"
 "loginAgain" = "Время сессии истекло. Пожалуйста, войдите в систему снова"
 
 [pages.login.toasts]
@@ -86,8 +86,8 @@
 "operationHours" = "Время работы"
 "operationHoursDesc" = "Время работы системы: время с момента запуска."
 "systemLoad" = "Системная нагрузка"
-"connectionCount" = "Количество соединений"
-"connectionCountDesc" = "Всего подключений по всем сетям»"
+"connectionTcpCountDesc" = "Всего подключений TCP по всем сетевым картам."
+"connectionUdpCountDesc" = "Общее количество подключений UDP по всем сетевым картам."
 "upSpeed" = "Общая скорость отдачи"
 "downSpeed" = "Общая скорость получения"
 "totalSent" = "Общий объем загруженных данных с момента запуска системы"
@@ -167,9 +167,13 @@
 "emailDesc" = "Пожалуйста, укажите уникальный Email"
 "setDefaultCert" = "Установить сертификат с панели"
 "telegramDesc" = "Используйте идентификатор Telegram без символа @ или идентификатора чата (можно получить его здесь @userinfobot или использовать команду '/id' в боте)"
-"subscriptionDesc" = "вы можете найти свою ссылку подписки в разделе «Подробнее», также вы можете использовать одно и то же имя для нескольких конфигов"
+"subscriptionDesc" = "вы можете найти свою ссылку подписки в разделе «Подробнее», также вы можете использовать одно и то же имя для нескольких клиенты"
 "info" = "Информация"
 "same" = "Тот же"
+"inboundData" = "Входящие данные"
+"copyToClipboard" = "Копировать в буфер обмена"
+"import" = "Импортировать"
+"importInbound" = "Импортировать входящее сообщение"
 
 [pages.client]
 "add" = "Добавить клиента"
@@ -184,26 +188,27 @@
 "prefix" = "Префикс"
 "postfix" = "Постфикс"
 "delayedStart" = "Начать со времени первого подключения"
-"expireDays" = "Срок действия"
+"expireDays" = "Длительность"
 "days" = "дней"
 "renew" = "Автопродление"
-"renewDesc" = "Автоматическое продление через несколько дней после истечения срока действия. 0 = отключить"
+"renewDesc" = "Автопродление после истечения срока действия. (0 = отключить)(единица: день) "
 
 [pages.inbounds.toasts]
 "obtain" = "Получить"
 
 [pages.inbounds.stream.general]
-"requestHeader" = "Заголовок запроса"
+"request" = "Запрос"
+"response" = "Ответ"
 "name" = "Имя"
-"value" = "Значение"
+"value" = "Ценить"
 
 [pages.inbounds.stream.tcp]
-"requestVersion" = "Версия запроса"
-"requestMethod" = "Метод запроса"
-"requestPath" = "Петь запроса"
-"responseVersion" = "Версия ответа"
-"responseStatus" = "Статус ответа"
-"responseStatusDescription" = "Описание статуса ответа"
+"version" = "Версия"
+"method" = "Метод"
+"path" = "Путь"
+"status" = "Положение дел"
+"statusDescription" = "Описание статуса"
+"requestHeader" = "Заголовок запроса"
 "responseHeader" = "Заголовок ответа"
 
 [pages.inbounds.stream.quic]
@@ -233,6 +238,8 @@
 "panelUrlPathDesc" = "Должен начинаться с «/» и заканчиваться на «/»."
 "pageSize" = "Размер нумерации страниц"
 "pageSizeDesc" = "Определить размер страницы для входящей таблицы. Установите 0, чтобы отключить"
+"remarkModel" = "Модель примечания и символ разделения"
+"sampleRemark" = "Пример замечания"
 "oldUsername" = "Текущее имя пользователя"
 "currentPassword" = "Текущий пароль"
 "newUsername" = "Новое имя пользователя"
@@ -306,6 +313,8 @@
 "directCountryConfigsDesc" = "Эти параметры будут подключать пользователей напрямую к доменам определенной страны."
 "ipv4Configs" = "Настройки IPv4"
 "ipv4ConfigsDesc" = "Эти параметры будут маршрутизироваться к целевым доменам только через IPv4"
+"warpConfigs" = "Настройки WARP"
+"warpConfigsDesc" = "WARP будет направлять трафик на веб-сайты через серверы Cloudflare"
 "Template" = "Шаблон конфигурации Xray"
 "TemplateDesc" = "Создание файла конфигурации Xray на основе этого шаблона."
 "FreedomStrategy" = "Настроить стратегию протокола Freedom"
@@ -348,6 +357,14 @@
 "GoogleIPv4Desc" = "Применить маршрутизацию Google для подключения к IPv4."
 "NetflixIPv4" = "Использовать IPv4 для Netflix"
 "NetflixIPv4Desc" = "Применить маршрутизацию Netflix для подключения к IPv4."
+"GoogleWARP" = "Маршрутизация Google через WARP"
+"GoogleWARPDesc" = "Добавить маршрутизацию для Google через WARP"
+"OpenAIWARP" = "Маршрутизация OpenAI (ChatGPT) через WARP"
+"OpenAIWARPDesc" = "Добавить маршрутизацию для OpenAI (ChatGPT) через WARP"
+"NetflixWARP" = "Маршрутизация Netflix через WARP"
+"NetflixWARPDesc" = "Добавить маршрутизацию для Netflix через WARP"
+"SpotifyWARP" = "Маршрутизация Spotify через WARP"
+"SpotifyWARPDesc" = "Добавить маршрутизацию для Spotify через WARP"
 "completeTemplate" = "Все"
 "Inbounds" = "Входящие"
 "Outbounds" = "Исходящие"
@@ -362,7 +379,7 @@
 "source" = "Источник"
 "dest" = "Пункт назначения"
 "inbound" = "Входящий"
-"outboun" = "Исходящий"
+"outbound" = "Исходящий"
 "info" = "Информация"
 "add" = "Добавить правило"
 "edit" = "Редактировать правило"
@@ -382,6 +399,14 @@
 "bridge" = "Мост"
 "portal" = "Портал"
 "intercon" = "Соединение"
+
+[pages.xray.wireguard]
+"secretKey" = "Секретный ключ"
+"publicKey" = "Открытый ключ"
+"allowedIPs" = "Разрешенные IP-адреса"
+"endpoint" = "Конечная точка"
+"psk" = "Общий ключ"
+"domainStrategy" = "Стратегия домена"
 
 [tgbot]
 "noResult" = "❗ Нет результатов!"

@@ -43,6 +43,10 @@
         0%, 50%, 100%   { transform: scale(1);  opacity:  1; }
         10%             { transform: scale(1.5); opacity: .2; }
     }
+    .info-large-tag {
+        max-width: 200px;
+        overflow: hidden;
+    }
 </style>
 
 <body>
@@ -125,6 +129,10 @@
                                             <template v-if="!isMobile">{{ i18n "pages.inbounds.generalActions" }}</template>
                                         </a-button>
                                         <a-menu slot="overlay" @click="a => generalActions(a)" :theme="themeSwitcher.currentTheme">
+                                            <a-menu-item key="import">
+                                                <a-icon type="import"></a-icon>
+                                                {{ i18n "pages.inbounds.importInbound" }}
+                                            </a-menu-item>
                                             <a-menu-item key="export">
                                                 <a-icon type="export"></a-icon>
                                                 {{ i18n "pages.inbounds.export" }}
@@ -156,9 +164,9 @@
                                 </a-col>
                             </a-row>
                         </div>
-                        <div style="display: flex; align-items: center; justify-content: flex-start;">
+                        <div :style="isMobile ? '' : 'display: flex; align-items: center; justify-content: flex-start;'">
                             <a-switch v-model="enableFilter"
-                                style="margin-right: .5rem;"
+                                :style="isMobile ? 'margin-bottom: .5rem; display: flex;' : 'margin-right: .5rem;'"
                                 @change="toggleFilter">
                                 <a-icon slot="checkedChildren" type="search"></a-icon>
                                 <a-icon slot="unCheckedChildren" type="filter"></a-icon>
@@ -226,6 +234,10 @@
                                         <a-menu-item key="resetTraffic">
                                             <a-icon type="retweet"></a-icon> {{ i18n "pages.inbounds.resetTraffic" }}
                                         </a-menu-item>
+                                        <a-menu-item key="clipboard">
+                                            <a-icon type="copy"></a-icon>
+                                            {{ i18n "pages.inbounds.copyToClipboard" }}
+                                        </a-menu-item>
                                         <a-menu-item key="clone">
                                             <a-icon type="block"></a-icon> {{ i18n "pages.inbounds.clone"}}
                                         </a-menu-item>
@@ -235,7 +247,7 @@
                                             </span>
                                         </a-menu-item>
                                         <a-menu-item v-if="isMobile">
-                                            <a-switch size="small" v-model="dbInbound.enable" @change="switchEnable(dbInbound.id)"></a-switch>
+                                            <a-switch size="small" v-model="dbInbound.enable" @change="switchEnable(dbInbound.id,dbInbound.enable)"></a-switch>
                                             {{ i18n "pages.inbounds.enable" }}
                                         </a-menu-item>
                                     </a-menu>
@@ -302,7 +314,7 @@
                                 </a-popover>
                             </template>
                             <template slot="enable" slot-scope="text, dbInbound">
-                                <a-switch v-model="dbInbound.enable" @change="switchEnable(dbInbound.id)"></a-switch>
+                                <a-switch v-model="dbInbound.enable" @change="switchEnable(dbInbound.id,dbInbound.enable)"></a-switch>
                             </template>
                             <template slot="expiryTime" slot-scope="text, dbInbound">
                                 <a-popover v-if="dbInbound.expiryTime > 0" :overlay-class-name="themeSwitcher.currentTheme">
@@ -415,7 +427,7 @@
                                     :columns="isMobile ? innerMobileColumns : innerColumns"
                                     :data-source="getInboundClients(record)"
                                     :pagination=pagination(getInboundClients(record))
-                                    :style="isMobile ? 'margin: -16px -5px -17px;' : 'margin-left: 10px;'">
+                                    style="margin: -12px -6px -13px;">
                                     {{template "client_table"}}
                                 </a-table>
                             </template>
@@ -509,9 +521,9 @@
         { title: '{{ i18n "pages.inbounds.operate" }}', width: 50, scopedSlots: { customRender: 'actions' } },
         { title: '{{ i18n "pages.inbounds.enable" }}', width: 20, scopedSlots: { customRender: 'enable' } },
         { title: '{{ i18n "online" }}', width: 20, scopedSlots: { customRender: 'online' } },
-        { title: '{{ i18n "pages.inbounds.client" }}', width: 80, scopedSlots: { customRender: 'client' } },
+        { title: '{{ i18n "pages.inbounds.client" }}', width: 70, scopedSlots: { customRender: 'client' } },
         { title: '{{ i18n "pages.inbounds.traffic" }}', width: 80, align: 'center', scopedSlots: { customRender: 'traffic' } },
-        { title: '{{ i18n "pages.inbounds.expireDate" }}', width: 80, align: 'center', scopedSlots: { customRender: 'expiryTime' } },
+        { title: '{{ i18n "pages.inbounds.expireDate" }}', width: 70, align: 'center', scopedSlots: { customRender: 'expiryTime' } },
     ];
 
     const innerMobileColumns = [
@@ -546,6 +558,7 @@
                 enable : false,
                 subURI : ''
             },
+            remarkModel: '-ieo',
             tgBotEnable: false,
             showAlert: false,
             pageSize: 0,
@@ -591,6 +604,7 @@
                         subURI: subURI
                     };
                     this.pageSize = pageSize;
+                    this.remarkModel = remarkModel;
                 }
             },
             setInbounds(dbInbounds) {
@@ -707,6 +721,9 @@
             },
             generalActions(action) {
                 switch (action.key) {
+                    case "import":
+                        this.importInbound();
+                        break;
                     case "export":
                         this.exportAllLinks();
                         break;
@@ -740,6 +757,9 @@
                         break;
                     case "export":
                         this.inboundLinks(dbInbound.id);
+                        break;
+                    case "clipboard":
+                        this.copyToClipboard(dbInbound.id);
                         break;
                     case "resetTraffic":
                         this.resetTraffic(dbInbound.id);
@@ -792,7 +812,7 @@
                 this.$confirm({
                     title: '{{ i18n "pages.inbounds.cloneInbound"}} \"' + dbInbound.remark + '\"',
                     content: '{{ i18n "pages.inbounds.cloneInboundContent"}}',
-                    okText: '{{ i18n "pages.inbounds.update"}}',
+                    okText: '{{ i18n "pages.inbounds.clone"}}',
                     class: themeSwitcher.currentTheme,
                     cancelText: '{{ i18n "cancel" }}',
                     onOk: () => {
@@ -928,7 +948,7 @@
             resetTraffic(dbInboundId) {
                 dbInbound = this.dbInbounds.find(row => row.id === dbInboundId);
                 this.$confirm({
-                    title: '{{ i18n "pages.inbounds.resetTraffic"}}',
+                    title: '{{ i18n "pages.inbounds.resetTraffic"}}' + ' #' + dbInboundId,
                     content: '{{ i18n "pages.inbounds.resetTrafficContent"}}',
                     class: themeSwitcher.currentTheme,
                     okText: '{{ i18n "reset"}}',
@@ -943,7 +963,7 @@
             },
             delInbound(dbInboundId) {
                 this.$confirm({
-                    title: '{{ i18n "pages.inbounds.deleteInbound"}}',
+                    title: '{{ i18n "pages.inbounds.deleteInbound"}}' + ' #' + dbInboundId,
                     content: '{{ i18n "pages.inbounds.deleteInboundContent"}}',
                     class: themeSwitcher.currentTheme,
                     okText: '{{ i18n "delete"}}',
@@ -956,7 +976,7 @@
                 clientId = this.getClientId(dbInbound.protocol, client);
                 if (confirmation){
                     this.$confirm({
-                        title: '{{ i18n "pages.inbounds.deleteClient"}}',
+                        title: '{{ i18n "pages.inbounds.deleteClient"}}' + ' ' + client.email,
                         content: '{{ i18n "pages.inbounds.deleteClientContent"}}',
                         class: themeSwitcher.currentTheme,
                         okText: '{{ i18n "delete"}}',
@@ -1010,8 +1030,9 @@
                 newDbInbound = this.checkFallback(dbInbound);
                 infoModal.show(newDbInbound, index);
             },
-            switchEnable(dbInboundId) {
+            switchEnable(dbInboundId,state) {
                 dbInbound = this.dbInbounds.find(row => row.id === dbInboundId);
+                dbInbound.enable = state;
                 this.submit(`/xui/inbound/update/${dbInboundId}`, dbInbound);
             },
             async switchEnableClient(dbInboundId, client) {
@@ -1037,7 +1058,7 @@
             resetClientTraffic(client, dbInboundId, confirmation = true) {
                 if (confirmation){
                     this.$confirm({
-                        title: '{{ i18n "pages.inbounds.resetTraffic"}}',
+                        title: '{{ i18n "pages.inbounds.resetTraffic"}}' + ' ' + client.email,
                         content: '{{ i18n "pages.inbounds.resetTrafficContent"}}',
                         class: themeSwitcher.currentTheme,
                         okText: '{{ i18n "reset"}}',
@@ -1073,7 +1094,7 @@
                     title: '{{ i18n "pages.inbounds.delDepletedClientsTitle"}}',
                     content: '{{ i18n "pages.inbounds.delDepletedClientsContent"}}',
                     class: themeSwitcher.currentTheme,
-                    okText: '{{ i18n "reset"}}',
+                    okText: '{{ i18n "delete"}}',
                     cancelText: '{{ i18n "cancel"}}',
                     onOk: () => this.submit('/xui/inbound/delDepletedClients/' + dbInboundId),
                 })
@@ -1159,14 +1180,30 @@
             inboundLinks(dbInboundId) {
                 dbInbound = this.dbInbounds.find(row => row.id === dbInboundId);
                 newDbInbound = this.checkFallback(dbInbound);
-                txtModal.show('{{ i18n "pages.inbounds.export"}}', newDbInbound.genInboundLinks, newDbInbound.remark);
+                txtModal.show('{{ i18n "pages.inbounds.export"}}', newDbInbound.genInboundLinks(this.remarkModel), newDbInbound.remark);
+            },
+            importInbound() {
+                promptModal.open({
+                    title: '{{ i18n "pages.inbounds.importInbound" }}',
+                    type: 'textarea',
+                    value: '',
+                    okText: '{{ i18n "pages.inbounds.import" }}',
+                    confirm: async (dbInboundText) => {
+                        await this.submit('/xui/inbound/import', {data: dbInboundText}, promptModal);
+                        promptModal.close();
+                    },
+                });
             },
 			exportAllLinks() {
                 let copyText = [];
                 for (const dbInbound of this.dbInbounds) {
-                    copyText.push(dbInbound.genInboundLinks);
+                    copyText.push(dbInbound.genInboundLinks(this.remarkModel));
                 }
                 txtModal.show('{{ i18n "pages.inbounds.export"}}', copyText.join('\r\n'), 'All-Inbounds');
+            },
+            copyToClipboard(dbInboundId) {
+                dbInbound = this.dbInbounds.find(row => row.id === dbInboundId);
+                txtModal.show('{{ i18n "pages.inbounds.inboundData" }}', JSON.stringify(dbInbound, null, 2));
             },
             async startDataRefreshLoop() {
                 while (this.isRefreshEnabled) {

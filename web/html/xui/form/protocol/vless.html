@@ -1,5 +1,4 @@
 {{define "form/vless"}}
-<a-form layout="inline">
 <a-collapse activeKey="0" v-for="(client, index) in inbound.settings.vlesses.slice(0,1)" v-if="!isEdit">    
     <a-collapse-panel header='{{ i18n "pages.inbounds.client" }}'>
         {{template "form/client"}}
@@ -34,26 +33,26 @@
     </a-form>
 
     <!-- vless fallbacks -->
-    <a-form v-for="(fallback, index) in inbound.settings.fallbacks" layout="inline">
+    <a-form v-for="(fallback, index) in inbound.settings.fallbacks" :colon="false" :label-col="{ md: {span:6} }" :wrapper-col="{ md: {span:14} }">
         <a-divider style="margin:0;">
-            fallback[[ index + 1 ]]
+            Fallback [[ index + 1 ]]
             <a-icon type="delete" @click="() => inbound.settings.delFallback(index)"
                     style="color: rgb(255, 77, 79);cursor: pointer;"/>
         </a-divider>
-        <a-form-item label="name">
+        <a-form-item label='SNI'>
             <a-input v-model="fallback.name"></a-input>
-        </a-form-item>
-        <a-form-item label="alpn">
+        </a-form-item>            
+        <a-form-item label='ALPN'>
             <a-input v-model="fallback.alpn"></a-input>
         </a-form-item>
-        <a-form-item label="path">
+        <a-form-item label='Path'>
             <a-input v-model="fallback.path"></a-input>
         </a-form-item>
-        <a-form-item label="dest">
+        <a-form-item label='Dest'>
             <a-input v-model="fallback.dest"></a-input>
         </a-form-item>
-        <a-form-item label="xver">
-            <a-input-number v-model.number="fallback.xver"></a-input-number>
+        <a-form-item label='xVer'>
+            <a-input-number v-model="fallback.xver" :min="0" :max="2"></a-input-number>
         </a-form-item>
     </a-form>
     <a-divider style="margin:0;"></a-divider>
