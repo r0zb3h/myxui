@@ -1,5 +1,4 @@
-name: Release X-UI
-
+name: Release X-ui
 on:
   push:
     tags:
@@ -7,17 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        platform: [amd64, arm64, arm]
+  linuxamd64build:
+    name: build x-ui amd64 version
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4.1.1
-
-      - name: Setup Go
-        uses: actions/setup-go@v5.0.0
+      - uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
         with:
           go-version: '1.21'
       - name: build linux amd64 version
@@ -31,7 +26,7 @@ jobs:
           mv xui-release x-ui
           mkdir bin
           cd bin
-          wget https://github.com/XTLS/Xray-core/releases/download/v1.8.6/Xray-linux-64.zip
+          wget https://github.com/XTLS/Xray-core/releases/download/v1.8.4/Xray-linux-64.zip
           unzip Xray-linux-64.zip
           rm -f Xray-linux-64.zip geoip.dat geosite.dat iran.dat
           wget https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
@@ -50,4 +45,3 @@ jobs:
           file: x-ui-linux-amd64.tar.gz
           asset_name: x-ui-linux-amd64.tar.gz
           prerelease: true
-  
